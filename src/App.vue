@@ -43,7 +43,7 @@
                       name="file-upload"
                       type="file"
                       class="sr-only"
-                      @change="previewThumbnail"
+                      @input="previewThumbnail"
                     />
                   </label>
                   <p class="pl-1">or drag and drop</p>
@@ -95,7 +95,7 @@
                   <button
                     type="button"
                     class="rounded-md text-gray-300 hover:text-black focus:outline-none focus:ring-2 focus:ring-black"
-                    @click="isLoading = false"
+                    @click="clear"
                   >
                     <span class="sr-only">Close panel</span>
                     <XMarkIcon class="h-6 w-6" aria-hidden="true" />
@@ -296,10 +296,11 @@ export default {
   computed: {},
 
   methods: {
-    clearValue() {
+    clear() {
       this.imageCanvas = null;
-      this.contextCanvas.drawImage(null, 0, 0);
       this.isLoading = false;
+      this.isTextIvent = false;
+      location.reload();
     },
 
     previewThumbnail(event) {
@@ -316,7 +317,6 @@ export default {
       }
 
       this.isLoading = true;
-
       this.selectImageCanvas(files[0]);
     },
 
@@ -369,7 +369,6 @@ export default {
       const x = event.offsetX * this.em();
       const y = event.offsetY * this.em();
       const fs = this.em() * 16;
-      let text = this.inputTextImg;
 
       if (this.isTextIvent) {
         this.contextCanvas.font = `bold ${fs}px Verdana, sans-serif`;
