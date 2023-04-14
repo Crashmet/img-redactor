@@ -116,7 +116,7 @@
                 >
                   <canvas
                     class="bg-white object-cover object-center"
-                    ref="canvas"
+                    ref="canvasImg"
                   ></canvas>
                   <canvas
                     class="absolute top-0 bg-transparent object-cover object-center w-full h-full"
@@ -275,8 +275,8 @@ export default {
       isLoading: false,
       isEdit: false,
 
-      canvas: null,
-      contextCanvas: null,
+      canvasImg: null,
+      contextCanvasImg: null,
       canvasSample: null,
       contextCanvasSample: null,
 
@@ -296,8 +296,8 @@ export default {
     dropContainer.addEventListener('dragenter', this.onDragEnter, true);
     dropContainer.addEventListener('dragover', this.onDragOver, true);
 
-    this.canvas = this.$refs.canvas;
-    this.contextCanvas = this.canvas.getContext('2d');
+    this.canvasImg = this.$refs.canvasImg;
+    this.contextCanvasImg = this.canvasImg.getContext('2d');
 
     this.canvasSample = this.$refs.canvasSample;
     this.contextCanvasSample = this.canvasSample.getContext('2d');
@@ -348,14 +348,14 @@ export default {
       this.imageCanvas = new Image();
 
       this.imageCanvas.onload = () => {
-        this.canvas.width = this.imageCanvas.width;
-        this.canvas.height = this.imageCanvas.height;
+        this.canvasImg.width = this.imageCanvas.width;
+        this.canvasImg.height = this.imageCanvas.height;
 
         this.canvasSample.width = this.imageCanvas.width;
         this.canvasSample.height = this.imageCanvas.height;
 
-        this.canvas.style.maxWidth = '500px';
-        this.contextCanvas.drawImage(this.imageCanvas, 0, 0);
+        this.canvasImg.style.maxWidth = '500px';
+        this.contextCanvasImg.drawImage(this.imageCanvas, 0, 0);
       };
 
       this.imageCanvas.src = e.target.result;
@@ -388,10 +388,10 @@ export default {
       const fsEm = this.em() * this.fontSize;
 
       if (this.isTextIvent) {
-        this.contextCanvas.font = `bold ${fsEm}px Verdana, sans-serif`;
-        this.contextCanvas.fillStyle = '#fff';
+        this.contextCanvasImg.font = `bold ${fsEm}px Verdana, sans-serif`;
+        this.contextCanvasImg.fillStyle = '#fff';
 
-        this.contextCanvas.fillText(this.inputTextImg, x, y);
+        this.contextCanvasImg.fillText(this.inputTextImg, x, y);
       }
     },
 
@@ -421,13 +421,13 @@ export default {
     handleSaveImage() {
       const link = document.createElement('a');
       link.download = 'image-edit.jpeg';
-      link.href = this.canvas.toDataURL();
+      link.href = this.canvasImg.toDataURL();
       link.click();
       link.remove();
     },
 
     em() {
-      return this.canvas.width > 500 ? this.canvas.width / 500 : 1;
+      return this.canvasImg.width > 500 ? this.canvasImg.width / 500 : 1;
     },
   },
 };
