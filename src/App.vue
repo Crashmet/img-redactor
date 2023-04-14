@@ -75,7 +75,7 @@
 
         <div class="fixed inset-0 z-10 overflow-y-auto">
           <div
-            class="flex min-h-full items-center justify-center p-4 text-center sm:items-center sm:p-0"
+            class="flex min-h-full min-w-full items-center justify-center p-4 text-center sm:items-center sm:p-0"
           >
             <div
               as="template"
@@ -87,7 +87,7 @@
               leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <div
-                class="relative flex flex-col items-center justify-center transform overflow-hidden rounded-lg bg-white text-center shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
+                class="relative flex flex-col items-center justify-center transform overflow-hidden rounded-lg bg-white text-center shadow-xl transition-all sm:my-8"
               >
                 <div
                   class="absolute right-0 top-0 -ml-8 flex pr-2 pt-4 sm:-ml-10 sm:pr-4"
@@ -101,7 +101,8 @@
                     <XMarkIcon class="h-6 w-6" aria-hidden="true" />
                   </button>
                 </div>
-                <div class="px-4 sm:px-6">
+
+                <div class="px-4 sm:px-6 min-w-full">
                   <div
                     class="mb-4 mt-4 text-xl font-semibold leading-6 text-gray-900"
                   >
@@ -110,22 +111,38 @@
                 </div>
                 <!-- IMG -->
 
-                <div class="overflow-hidden mr-5 ml-5 mb-5 rounded-[5px]">
+                <div class="overflow-hidden mr-5 ml-5 mb-4 rounded-[5px]">
                   <canvas
                     class="bg-white object-cover object-center"
                     ref="canvas"
                   ></canvas>
                 </div>
 
+                <!-- input text editor -->
+
+                <div class="mb-4" v-if="isTextIvent">
+                  <label
+                    for="username"
+                    class="block text-sm font-medium leading-6 text-gray-900"
+                    >Введите текст</label
+                  >
+                  <input
+                    type="text"
+                    name="username"
+                    id="username"
+                    autocomplete="..."
+                    class="rounded block ring-1 ring-inset ring-gray-300 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 hover:bg-gray-50"
+                    placeholder="Enter text"
+                    v-model="inputTextImg"
+                  />
+                </div>
                 <!-- top btn  -->
 
-                <div
-                  v-if="isEdit"
-                  class="relative mt-6 flex-1 px-4 sm:px-6 mb-8"
-                >
+                <div v-if="isEdit" class="relative flex-1 px-4 sm:px-6 mb-8">
                   <div class="mt-5 flex lg:ml-4 lg:mt-0">
                     <span class="hidden sm:block">
                       <button
+                        @click="isTextIvent = !isTextIvent"
                         type="button"
                         class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                       >
@@ -198,6 +215,7 @@
 
                     <span class="sm:ml-3">
                       <button
+                        @click="handleSaveImage"
                         type="button"
                         class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                       >
@@ -253,9 +271,10 @@ export default {
 
       canvas: null,
       contextCanvas: null,
+      imageCanvas: null,
 
       inputTextImg: '',
-      imageCanvas: null,
+      isTextIvent: false,
     };
   },
 
@@ -269,7 +288,7 @@ export default {
     this.canvas = this.$refs.canvas;
     this.contextCanvas = this.canvas.getContext('2d');
 
-    this.canvas.addEventListener('mousedown', this.mousedownImgEdit);
+    this.canvas.addEventListener('mousedown', this.handleMousedownCanvas);
     this.canvas.addEventListener('mousemove', this.mousemoveImgEdit);
     document.addEventListener('mouseup', this.mouseupImgEdit);
   },
@@ -317,8 +336,8 @@ export default {
       this.imageCanvas.onload = () => {
         this.canvas.width = this.imageCanvas.width;
         this.canvas.height = this.imageCanvas.height;
+
         this.canvas.style.maxWidth = '500px';
-        this.canvas.style.maxHeight = '400px';
         this.contextCanvas.drawImage(this.imageCanvas, 0, 0);
       };
 
@@ -346,34 +365,39 @@ export default {
     },
 
     // canvas
-    handleClickCanvas(event) {
-      let text;
-
-      if (text) {
-        ctx.clearRect(
-          text.x,
-          text.y,
-          ctx.measureText(text.value).width,
-          parseInt(getComputedStyle(ctx.canvas).fontSize)
-        );
-      }
+    handleMousedownCanvas(event) {
       const x = event.offsetX;
       const y = event.offsetY;
-      this.inputTextImg = '12345';
-      if (value) {
-        text = {
-          x,
-          y,
-          value,
-        };
-        ctx.font = `${getComputedStyle(ctx.canvas).fontSize} sans-serif`;
-        ctx.fillStyle = '#fff';
-        ctx.fillText(value, x, y);
+      let text = this.inputTextImg;
+
+      if (this.isTextIvent) {
+        this.contextCanvas.font = `bold ${
+          this.em() * 16
+        }px Verdana, sans-serif`;
+        this.contextCanvas.fillStyle = '#fff';
+
+        this.contextCanvas.fillText(
+          this.inputTextImg,
+          x * this.em(),
+          y * this.em()
+        );
       }
     },
 
     handleAddEditor() {
       this.isEdit = !this.isEdit;
+    },
+
+    handleSaveImage() {
+      const link = document.createElement('a');
+      link.download = 'image-edit.jpeg';
+      link.href = this.canvas.toDataURL();
+      link.click();
+      link.remove();
+    },
+
+    em() {
+      return this.canvas.width > 500 ? this.canvas.width / 500 : 1;
     },
   },
 };
