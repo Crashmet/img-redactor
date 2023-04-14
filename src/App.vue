@@ -126,10 +126,10 @@
 
                 <!-- input text editor -->
 
-                <div class="mb-4" v-if="isTextIvent">
+                <div class="mb-6" v-if="isTextIvent">
                   <label
                     for="username"
-                    class="block text-sm font-medium leading-6 text-gray-900"
+                    class="block text-base font-medium leading-6 text-gray-900 mb-1"
                     >Введите текст</label
                   >
                   <input
@@ -137,9 +137,28 @@
                     name="username"
                     id="username"
                     autocomplete="..."
-                    class="rounded block ring-1 ring-inset ring-gray-300 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 hover:bg-gray-50"
+                    class="w-full rounded block ring-1 ring-inset ring-gray-300 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 hover:bg-gray-50"
                     placeholder="Enter text"
                     v-model="inputTextImg"
+                  />
+                </div>
+
+                <!-- input Poligon editor -->
+
+                <div class="mb-6" v-if="isPolyhedronIvent">
+                  <label
+                    for="username"
+                    class="block text-base font-medium leading-6 text-gray-900 mb-1"
+                    >Введите количество полигонов</label
+                  >
+                  <input
+                    type="text"
+                    name="username"
+                    id="username"
+                    autocomplete="..."
+                    class="w-full rounded block ring-1 ring-inset ring-gray-300 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 hover:bg-gray-50"
+                    placeholder="Enter corners"
+                    v-model="cornersValue"
                   />
                 </div>
                 <!-- top btn  -->
@@ -148,7 +167,7 @@
                   <div class="mt-5 flex lg:ml-4 lg:mt-0">
                     <span class="hidden sm:block">
                       <button
-                        @click="isTextIvent = !isTextIvent"
+                        @click="handlerTextButton"
                         type="button"
                         class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                       >
@@ -162,6 +181,7 @@
 
                     <span class="ml-3 hidden sm:block">
                       <button
+                        @click="handlerPolyhedronButton"
                         type="button"
                         class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                       >
@@ -175,6 +195,7 @@
 
                     <span class="ml-3 hidden sm:block">
                       <button
+                        @click="handlerRectangleButton"
                         type="button"
                         class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                       >
@@ -282,8 +303,13 @@ export default {
 
       imageCanvas: null,
 
-      inputTextImg: '',
       isTextIvent: false,
+      inputTextImg: '',
+
+      isPolyhedronIvent: false,
+      cornersValue: 3,
+
+      isRectangleIvent: false,
 
       fontSize: 16,
     };
@@ -304,16 +330,36 @@ export default {
 
     this.canvasSample.addEventListener('mousedown', this.handleMousedownCanvas);
     this.canvasSample.addEventListener('mousemove', this.handleMousemoveSample);
-    document.addEventListener('mouseup', this.mouseupImgEdit);
+    document.addEventListener('mouseup', this.handlerMouseupEdit);
   },
 
   computed: {},
 
   methods: {
+    handlerTextButton() {
+      this.isTextIvent = !this.isTextIvent;
+      this.isPolyhedronIvent = false;
+      this.isRectangleIvent = false;
+    },
+
+    handlerPolyhedronButton() {
+      this.isPolyhedronIvent = !this.isPolyhedronIvent;
+      this.isTextIvent = false;
+      this.isRectangleIvent = false;
+    },
+
+    handlerRectangleButton() {
+      this.isRectangleIvent = !this.isRectangleIvent;
+      this.isTextIvent = false;
+      this.isPolyhedronIvent = false;
+    },
+
     clear() {
       this.imageCanvas = null;
       this.isLoading = false;
       this.isTextIvent = false;
+      this.isPolyhedronIvent = false;
+      this.isRectangleIvent = false;
       location.reload();
     },
 
@@ -414,8 +460,20 @@ export default {
       }
     },
 
+    handlerMouseupEdit() {
+      this.contextCanvasSample.clearRect(
+        0,
+        0,
+        this.contextCanvasSample.canvas.width,
+        this.contextCanvasSample.canvas.height
+      );
+    },
+
     handleAddEditor() {
       this.isEdit = !this.isEdit;
+      this.isTextIvent = false;
+      this.isPolyhedronIvent = false;
+      this.isRectangleIvent = false;
     },
 
     handleSaveImage() {
