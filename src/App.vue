@@ -513,7 +513,7 @@ export default {
 
     handleSaveImage() {
       const link = document.createElement('a');
-      link.download = 'image-edit.jpeg';
+      link.download = 'image-edit.jpg';
       link.href = this.canvasImg.toDataURL();
       link.click();
       link.remove();
