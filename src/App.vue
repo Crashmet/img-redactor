@@ -126,7 +126,7 @@
 
                 <!-- input text editor -->
 
-                <div class="mb-6" v-if="isTextIvent">
+                <div class="mb-6" v-if="isTextEvent">
                   <label
                     for="username"
                     class="block text-base font-medium leading-6 text-gray-900 mb-1"
@@ -145,7 +145,7 @@
 
                 <!-- input Poligon editor -->
 
-                <div class="mb-6" v-if="isPolyhedronIvent">
+                <div class="mb-6" v-if="isPolyhedronEvent">
                   <label
                     for="username"
                     class="block text-base font-medium leading-6 text-gray-900 mb-1"
@@ -303,13 +303,20 @@ export default {
 
       imageCanvas: null,
 
-      isTextIvent: false,
+      isTextEvent: false,
       inputTextImg: '',
 
-      isPolyhedronIvent: false,
+      isPolyhedronEvent: false,
       cornersValue: 3,
 
-      isRectangleIvent: false,
+      isRectangleEvent: false,
+
+      clickX: null,
+      clickY: null,
+      mouseX: null,
+      mouseY: null,
+
+      maxWidth: 500,
 
       fontSize: 16,
     };
@@ -328,38 +335,38 @@ export default {
     this.canvasSample = this.$refs.canvasSample;
     this.contextCanvasSample = this.canvasSample.getContext('2d');
 
-    this.canvasSample.addEventListener('mousedown', this.handleMousedownCanvas);
+    this.canvasSample.addEventListener('mousedown', this.handleMousedownSample);
     this.canvasSample.addEventListener('mousemove', this.handleMousemoveSample);
-    document.addEventListener('mouseup', this.handlerMouseupEdit);
+    document.addEventListener('mouseup', this.handlerMouseup);
   },
 
   computed: {},
 
   methods: {
     handlerTextButton() {
-      this.isTextIvent = !this.isTextIvent;
-      this.isPolyhedronIvent = false;
-      this.isRectangleIvent = false;
+      this.isTextEvent = !this.isTextEvent;
+      this.isPolyhedronEvent = false;
+      this.isRectangleEvent = false;
     },
 
     handlerPolyhedronButton() {
-      this.isPolyhedronIvent = !this.isPolyhedronIvent;
-      this.isTextIvent = false;
-      this.isRectangleIvent = false;
+      this.isPolyhedronEvent = !this.isPolyhedronEvent;
+      this.isTextEvent = false;
+      this.isRectangleEvent = false;
     },
 
     handlerRectangleButton() {
-      this.isRectangleIvent = !this.isRectangleIvent;
-      this.isTextIvent = false;
-      this.isPolyhedronIvent = false;
+      this.isRectangleEvent = !this.isRectangleEvent;
+      this.isTextEvent = false;
+      this.isPolyhedronEvent = false;
     },
 
     clear() {
       this.imageCanvas = null;
       this.isLoading = false;
-      this.isTextIvent = false;
-      this.isPolyhedronIvent = false;
-      this.isRectangleIvent = false;
+      this.isTextEvent = false;
+      this.isPolyhedronEvent = false;
+      this.isRectangleEvent = false;
       location.reload();
     },
 
@@ -400,7 +407,7 @@ export default {
         this.canvasSample.width = this.imageCanvas.width;
         this.canvasSample.height = this.imageCanvas.height;
 
-        this.canvasImg.style.maxWidth = '500px';
+        this.canvasImg.style.maxWidth = `${this.maxWidth}px`;
         this.contextCanvasImg.drawImage(this.imageCanvas, 0, 0);
       };
 
@@ -428,39 +435,67 @@ export default {
     },
 
     // canvas
-    handleMousedownCanvas(event) {
-      const x = event.offsetX * this.em();
-      const y = event.offsetY * this.em();
+    handleMousedownSample(event) {
+      this.clickX = event.offsetX * this.em();
+      this.clickY = event.offsetY * this.em();
+
+      if (this.isTextEvent) {
+        this.fillTextEvent();
+      } else if (this.isRectangleEvent) {
+        this.rectEvent();
+      }
+    },
+
+    fillTextEvent() {
       const fsEm = this.em() * this.fontSize;
 
-      if (this.isTextIvent) {
-        this.contextCanvasImg.font = `bold ${fsEm}px Verdana, sans-serif`;
-        this.contextCanvasImg.fillStyle = '#fff';
+      this.contextCanvasImg.font = `bold ${fsEm}px Verdana, sans-serif`;
+      this.contextCanvasImg.fillStyle = '#fff';
 
-        this.contextCanvasImg.fillText(this.inputTextImg, x, y);
-      }
+      this.contextCanvasImg.fillText(
+        this.inputTextImg,
+        this.clickX,
+        this.clickY
+      );
+    },
+
+    previewFillText() {
+      const fsEm = this.em() * this.fontSize;
+
+      this.contextCanvasSample.font = `bold ${fsEm}px Verdana, sans-serif`;
+      this.contextCanvasSample.fillStyle = '#000';
+
+      this.contextCanvasSample.clearRect(
+        0,
+        0,
+        this.contextCanvasSample.canvas.width,
+        this.contextCanvasSample.canvas.height
+      );
+      this.contextCanvasSample.fillText(
+        this.inputTextImg,
+        this.mouseX,
+        this.mouseY
+      );
+    },
+
+    rectEvent() {
+      this.contextCanvasImg.strokeRect(this.clickX, this.clickY, 50, 50);
     },
 
     handleMousemoveSample() {
-      const x = event.offsetX * this.em();
-      const y = event.offsetY * this.em();
-      const fsEm = this.em() * this.fontSize;
+      this.mouseX = event.offsetX * this.em();
+      this.mouseY = event.offsetY * this.em();
 
-      if (this.isTextIvent) {
-        this.contextCanvasSample.font = `bold ${fsEm}px Verdana, sans-serif`;
-        this.contextCanvasSample.fillStyle = '#000';
-
-        this.contextCanvasSample.clearRect(
-          0,
-          0,
-          this.contextCanvasSample.canvas.width,
-          this.contextCanvasSample.canvas.height
-        );
-        this.contextCanvasSample.fillText(this.inputTextImg, x, y);
+      if (this.isTextEvent) {
+        this.previewFillText();
       }
     },
 
-    handlerMouseupEdit() {
+    handlerMouseup() {
+      this.handlerResetCanas();
+    },
+
+    handlerResetCanas() {
       this.contextCanvasSample.clearRect(
         0,
         0,
@@ -471,9 +506,9 @@ export default {
 
     handleAddEditor() {
       this.isEdit = !this.isEdit;
-      this.isTextIvent = false;
-      this.isPolyhedronIvent = false;
-      this.isRectangleIvent = false;
+      this.isTextEvent = false;
+      this.isPolyhedronEvent = false;
+      this.isRectangleEvent = false;
     },
 
     handleSaveImage() {
@@ -485,7 +520,9 @@ export default {
     },
 
     em() {
-      return this.canvasImg.width > 500 ? this.canvasImg.width / 500 : 1;
+      return this.canvasImg.width > this.maxWidth
+        ? this.canvasImg.width / this.maxWidth
+        : 1;
     },
   },
 };
