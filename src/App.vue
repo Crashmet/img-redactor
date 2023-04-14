@@ -111,10 +111,16 @@
                 </div>
                 <!-- IMG -->
 
-                <div class="overflow-hidden mr-5 ml-5 mb-4 rounded-[5px]">
+                <div
+                  class="relative overflow-hidden mr-5 ml-5 mb-4 rounded-[5px]"
+                >
                   <canvas
                     class="bg-white object-cover object-center"
                     ref="canvas"
+                  ></canvas>
+                  <canvas
+                    class="absolute top-0 bg-transparent object-cover object-center w-full h-full"
+                    ref="canvasSample"
                   ></canvas>
                 </div>
 
@@ -271,10 +277,15 @@ export default {
 
       canvas: null,
       contextCanvas: null,
+      canvasSample: null,
+      contextCanvasSample: null,
+
       imageCanvas: null,
 
       inputTextImg: '',
       isTextIvent: false,
+
+      fontSize: 16,
     };
   },
 
@@ -288,8 +299,11 @@ export default {
     this.canvas = this.$refs.canvas;
     this.contextCanvas = this.canvas.getContext('2d');
 
-    this.canvas.addEventListener('mousedown', this.handleMousedownCanvas);
-    this.canvas.addEventListener('mousemove', this.mousemoveImgEdit);
+    this.canvasSample = this.$refs.canvasSample;
+    this.contextCanvasSample = this.canvasSample.getContext('2d');
+
+    this.canvasSample.addEventListener('mousedown', this.handleMousedownCanvas);
+    this.canvasSample.addEventListener('mousemove', this.handleMousemoveSample);
     document.addEventListener('mouseup', this.mouseupImgEdit);
   },
 
@@ -337,6 +351,9 @@ export default {
         this.canvas.width = this.imageCanvas.width;
         this.canvas.height = this.imageCanvas.height;
 
+        this.canvasSample.width = this.imageCanvas.width;
+        this.canvasSample.height = this.imageCanvas.height;
+
         this.canvas.style.maxWidth = '500px';
         this.contextCanvas.drawImage(this.imageCanvas, 0, 0);
       };
@@ -368,13 +385,32 @@ export default {
     handleMousedownCanvas(event) {
       const x = event.offsetX * this.em();
       const y = event.offsetY * this.em();
-      const fs = this.em() * 16;
+      const fsEm = this.em() * this.fontSize;
 
       if (this.isTextIvent) {
-        this.contextCanvas.font = `bold ${fs}px Verdana, sans-serif`;
+        this.contextCanvas.font = `bold ${fsEm}px Verdana, sans-serif`;
         this.contextCanvas.fillStyle = '#fff';
 
         this.contextCanvas.fillText(this.inputTextImg, x, y);
+      }
+    },
+
+    handleMousemoveSample() {
+      const x = event.offsetX * this.em();
+      const y = event.offsetY * this.em();
+      const fsEm = this.em() * this.fontSize;
+
+      if (this.isTextIvent) {
+        this.contextCanvasSample.font = `bold ${fsEm}px Verdana, sans-serif`;
+        this.contextCanvasSample.fillStyle = '#000';
+
+        this.contextCanvasSample.clearRect(
+          0,
+          0,
+          this.contextCanvasSample.canvas.width,
+          this.contextCanvasSample.canvas.height
+        );
+        this.contextCanvasSample.fillText(this.inputTextImg, x, y);
       }
     },
 
