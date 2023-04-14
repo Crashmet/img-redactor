@@ -366,21 +366,16 @@ export default {
 
     // canvas
     handleMousedownCanvas(event) {
-      const x = event.offsetX;
-      const y = event.offsetY;
+      const x = event.offsetX * this.em();
+      const y = event.offsetY * this.em();
+      const fs = this.em() * 16;
       let text = this.inputTextImg;
 
       if (this.isTextIvent) {
-        this.contextCanvas.font = `bold ${
-          this.em() * 16
-        }px Verdana, sans-serif`;
+        this.contextCanvas.font = `bold ${fs}px Verdana, sans-serif`;
         this.contextCanvas.fillStyle = '#fff';
 
-        this.contextCanvas.fillText(
-          this.inputTextImg,
-          x * this.em(),
-          y * this.em()
-        );
+        this.contextCanvas.fillText(this.inputTextImg, x, y);
       }
     },
 
