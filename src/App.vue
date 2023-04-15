@@ -363,11 +363,18 @@ export default {
       isPolyhedronEvent: false,
       isSelectPolygons: false,
       polygonPointsValue: 3,
-      polygonPointsValues: [3, 4, 5, 6, 7, 8],
+      polygonPointsValues: [1, 2, 3, 4, 5, 6, 7, 8],
       addPointsPreview: 0,
       polygonPoints: [],
 
       isRectangleEvent: false,
+      isRectAdd: false,
+      startWidhtRect: 50,
+      startHeigthRect: 50,
+      rectWidth: null,
+      rectHeigth: null,
+      rectX: null,
+      rectY: null,
 
       clickX: null,
       clickY: null,
@@ -395,6 +402,10 @@ export default {
 
     this.canvasSample.addEventListener('mousedown', this.handleMousedownSample);
     this.canvasSample.addEventListener('mousemove', this.handleMousemoveSample);
+    this.canvasSample.addEventListener(
+      'mouseleave',
+      this.handleMouseleaveSample
+    );
     document.addEventListener('mouseup', this.handlerMouseup);
   },
 
@@ -514,8 +525,14 @@ export default {
 
       if (this.isTextEvent) {
         this.previewFillText();
-      } else if (this.isPolyhedronEvent) {
-        // this.previewPolyhedronEvent();
+      } else if (this.isRectangleEvent) {
+        // this.rectEvent();
+      }
+    },
+
+    handleMouseleaveSample() {
+      if (this.isTextEvent) {
+        this.resetCanvasSample();
       }
     },
 
@@ -524,12 +541,16 @@ export default {
       const fsEm = this.em() * this.fontSize;
 
       this.contextCanvasSample.font = `bold ${fsEm}px Verdana, sans-serif`;
+      this.contextCanvasSample.textAlign = 'center';
+      this.contextCanvasSample.textBaseline = 'middle';
       this.contextCanvasSample.fillStyle = '#000';
     },
 
     settingsStyleTextImg() {
       const fsEm = this.em() * this.fontSize;
       this.contextCanvasImg.font = `bold ${fsEm}px Verdana, sans-serif`;
+      this.contextCanvasImg.textAlign = 'center';
+      this.contextCanvasImg.textBaseline = 'middle';
       this.contextCanvasImg.fillStyle = '#fff';
     },
 
@@ -542,7 +563,16 @@ export default {
     settingsStylePoligonImg() {
       this.contextCanvasImg.lineWidth = this.em() * this.lineWidth;
       this.contextCanvasImg.strokeStyle = '#fff';
-      this.contextCanvasImg.lineCap = 'round';
+    },
+
+    settingsStyleRectPreview() {
+      this.contextCanvasSample.lineWidth = this.em() * this.lineWidth;
+      this.contextCanvasSample.strokeStyle = 'blue';
+    },
+
+    settingsStyleRectImg() {
+      this.contextCanvasImg.lineWidth = this.em() * this.lineWidth;
+      this.contextCanvasImg.strokeStyle = '#fff';
     },
 
     // events Canvas
@@ -585,9 +615,7 @@ export default {
 
     handlerAddPolyhedronPoint() {
       this.contextCanvasSample.beginPath();
-      this.contextCanvasSample.moveTo(this.mouseX, this.mouseY);
-
-      this.contextCanvasSample.lineTo(this.mouseX, this.mouseY);
+      this.contextCanvasSample.arc(this.mouseX, this.mouseY, 0, 0, Math.PI * 2);
 
       this.settingsStylePoligonPreview();
 
@@ -641,9 +669,37 @@ export default {
       }
     },
 
-    // rectEvent() {
-    //   this.contextCanvasImg.strokeRect(this.clickX, this.clickY, 50, 50);
-    // },
+    rectEvent() {
+      // this.resetCanvasSample();
+
+      // const clickRectWidth = 50 * this.em();
+      // const clickRectHeigth = 50 * this.em();
+      // const clickRectX = this.clickX - rectWidth / 2;
+      // const clickRectY = this.clickY - rectHigth / 2;
+
+      if (!this.isRectAdd) {
+        this.isRectAdd = true;
+
+        this.settingsStyleRectPreview();
+
+        this.rectWidth = this.startWidhtRect * this.em();
+        this.rectHeigth = this.startHeigthRect * this.em();
+        this.rectX = this.clickX - this.rectWidth / 2;
+        this.rectY = this.clickY - this.rectHeigth / 2;
+
+        this.contextCanvasSample.beginPath();
+        this.contextCanvasSample.rect(
+          this.rectX,
+          this.rectY,
+          this.rectWidth,
+          this.rectHeigth
+        );
+        this.contextCanvasSample.stroke();
+      } else if (this.isRectAdd) {
+      }
+    },
+
+    // reset Canvas
 
     resetCanvasSample() {
       this.contextCanvasSample.clearRect(
@@ -655,10 +711,6 @@ export default {
     },
 
     // handler events
-    handlerMouseup() {
-      //
-    },
-
     addPolygonPointsValue(value) {
       this.handlerResetCanas();
       this.polygonPointsValue = value;
