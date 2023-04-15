@@ -157,8 +157,8 @@
                     id="username"
                     autocomplete="..."
                     class="w-full rounded block ring-1 ring-inset ring-gray-300 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 hover:bg-gray-50"
-                    placeholder="Enter corners"
-                    v-model="cornersValue"
+                    placeholder="Enter polygons value"
+                    v-model="polygonPointsValue"
                   />
                 </div>
                 <!-- top btn  -->
@@ -229,6 +229,7 @@
 
                     <span class="ml-3 hidden sm:block">
                       <button
+                        @click="handlerResetCanas"
                         type="button"
                         class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                       >
@@ -307,7 +308,8 @@ export default {
       inputTextImg: '',
 
       isPolyhedronEvent: false,
-      cornersValue: 3,
+      polygonPointsValue: '3',
+      polygonPoints: [],
 
       isRectangleEvent: false,
 
@@ -362,7 +364,9 @@ export default {
     },
 
     clear() {
-      this.imageCanvas = null;
+      // this.imageCanvas = null;
+      // this.canvasImg.width = this.canvasImg.width;
+      // this.canvasSample.width = this.canvasSample.width;
       this.isLoading = false;
       this.isTextEvent = false;
       this.isPolyhedronEvent = false;
@@ -441,10 +445,25 @@ export default {
 
       if (this.isTextEvent) {
         this.fillTextEvent();
+      } else if (this.isPolyhedronEvent) {
+        this.handlerPreviewPoint();
       } else if (this.isRectangleEvent) {
         this.rectEvent();
       }
     },
+
+    handleMousemoveSample() {
+      this.mouseX = event.offsetX * this.em();
+      this.mouseY = event.offsetY * this.em();
+
+      if (this.isTextEvent) {
+        this.previewFillText();
+      } else if (this.isPolyhedronEvent) {
+        this.previewPolyhedronEvent();
+      }
+    },
+
+    // events Canvas
 
     fillTextEvent() {
       const fsEm = this.em() * this.fontSize;
@@ -459,18 +478,18 @@ export default {
       );
     },
 
+    // rectEvent() {
+    //   this.contextCanvasImg.strokeRect(this.clickX, this.clickY, 50, 50);
+    // },
+
     previewFillText() {
       const fsEm = this.em() * this.fontSize;
 
       this.contextCanvasSample.font = `bold ${fsEm}px Verdana, sans-serif`;
       this.contextCanvasSample.fillStyle = '#000';
 
-      this.contextCanvasSample.clearRect(
-        0,
-        0,
-        this.contextCanvasSample.canvas.width,
-        this.contextCanvasSample.canvas.height
-      );
+      this.resetCanvasSample();
+
       this.contextCanvasSample.fillText(
         this.inputTextImg,
         this.mouseX,
@@ -478,30 +497,50 @@ export default {
       );
     },
 
-    rectEvent() {
-      this.contextCanvasImg.strokeRect(this.clickX, this.clickY, 50, 50);
+    handlerPreviewPoint() {
+      this.polygonPoints.push({ x: this.mouseX, y: this.mouseY });
     },
 
-    handleMousemoveSample() {
-      this.mouseX = event.offsetX * this.em();
-      this.mouseY = event.offsetY * this.em();
+    previewPolyhedronEvent() {
+      this.contextCanvasSample.strokeStyle = 'green';
+      this.contextCanvasSample.lineWidth = this.em() * 3;
 
-      if (this.isTextEvent) {
-        this.previewFillText();
+      this.contextCanvasSample.beginPath();
+      this.contextCanvasSample.moveTo(
+        this.polygonPoints[0].x,
+        this.polygonPoints[0].y
+      );
+
+      if (this.polygonPoints.length > 1) {
+        for (let i = 1; i < this.polygonPointsValue; i++) {
+          this.contextCanvasSample.lineTo(
+            this.polygonPoints[i].x,
+            this.polygonPoints[i].y
+          );
+        }
       }
+
+      this.contextCanvasSample.closePath();
+      this.contextCanvasSample.stroke();
     },
 
-    handlerMouseup() {
-      this.handlerResetCanas();
-    },
-
-    handlerResetCanas() {
+    resetCanvasSample() {
       this.contextCanvasSample.clearRect(
         0,
         0,
         this.contextCanvasSample.canvas.width,
         this.contextCanvasSample.canvas.height
       );
+    },
+
+    // handler events
+    handlerMouseup() {
+      //
+    },
+
+    handlerResetCanas() {
+      this.resetCanvasSample();
+      this.polygonPoints = [];
     },
 
     handleAddEditor() {
@@ -523,6 +562,11 @@ export default {
       return this.canvasImg.width > this.maxWidth
         ? this.canvasImg.width / this.maxWidth
         : 1;
+    },
+  },
+  watch: {
+    polygonPointsValue() {
+      this.handlerResetCanas();
     },
   },
 };
