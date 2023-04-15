@@ -406,12 +406,14 @@ export default {
       'mouseleave',
       this.handleMouseleaveSample
     );
-    document.addEventListener('mouseup', this.handlerMouseup);
+    this.canvasSample.addEventListener('mouseup', this.handlerMouseupSample);
   },
 
   computed: {},
 
   methods: {
+    // clear event
+
     handlerTextButton() {
       this.isTextEvent = !this.isTextEvent;
       this.isPolyhedronEvent = false;
@@ -441,6 +443,8 @@ export default {
       location.reload();
     },
 
+    // downoland img
+
     previewThumbnail(event) {
       this.handleFiles(event.target.files);
     },
@@ -458,7 +462,6 @@ export default {
       this.selectImageCanvas(files[0]);
     },
 
-    // загружаем изображение
     selectImageCanvas(file) {
       let reader = new FileReader();
 
@@ -485,7 +488,7 @@ export default {
       this.imageCanvas.src = e.target.result;
     },
 
-    // on Drag
+    //  Drag and drop
 
     onDragEnter(e) {
       e.stopPropagation();
@@ -505,7 +508,7 @@ export default {
       }
     },
 
-    // canvas
+    // canvas mouse event
     handleMousedownSample(event) {
       this.clickX = event.offsetX * this.em();
       this.clickY = event.offsetY * this.em();
@@ -515,7 +518,13 @@ export default {
       } else if (this.isPolyhedronEvent) {
         this.previewPolyhedronPoint();
       } else if (this.isRectangleEvent) {
-        this.rectEvent();
+        this.mousedownRectEvent();
+      }
+    },
+
+    handlerMouseupSample() {
+      if (this.isRectangleEvent) {
+        this.mouseupRectEvent();
       }
     },
 
@@ -526,7 +535,7 @@ export default {
       if (this.isTextEvent) {
         this.previewFillText();
       } else if (this.isRectangleEvent) {
-        // this.rectEvent();
+        this.mousemoveRectEvent();
       }
     },
 
@@ -536,7 +545,7 @@ export default {
       }
     },
 
-    // settings
+    // settings canvas figure
     settingsStyleTextPreview() {
       const fsEm = this.em() * this.fontSize;
 
@@ -669,34 +678,89 @@ export default {
       }
     },
 
-    rectEvent() {
-      // this.resetCanvasSample();
+    findAngleRect() {
+      if (
+        this.clickX < this.rectX + 9 &&
+        this.clickX > this.rectX - 9 &&
+        this.clickY < this.rectY + 9 &&
+        this.clickY > this.rectY - 9
+      ) {
+        console.log('лево верх');
+      } else if (
+        this.clickX < this.rectX + this.rectWidth + 9 &&
+        this.clickX > this.rectX + this.rectWidth - 9 &&
+        this.clickY < this.rectY + 9 &&
+        this.clickY > this.rectY - 9
+      ) {
+        console.log('право верх');
+      } else if (
+        this.clickX < this.rectX + this.rectWidth + 9 &&
+        this.clickX > this.rectX + this.rectWidth - 9 &&
+        this.clickY < this.rectY + this.rectHeigth + 9 &&
+        this.clickY > this.rectY + this.rectHeigth - 9
+      ) {
+        console.log('право низ');
+      } else if (
+        this.clickX < this.rectX + 9 &&
+        this.clickX > this.rectX - 9 &&
+        this.clickY < this.rectY + this.rectHeigth + 9 &&
+        this.clickY > this.rectY + this.rectHeigth - 9
+      ) {
+        console.log('лево низ');
+      }
+    },
 
-      // const clickRectWidth = 50 * this.em();
-      // const clickRectHeigth = 50 * this.em();
-      // const clickRectX = this.clickX - rectWidth / 2;
-      // const clickRectY = this.clickY - rectHigth / 2;
+    findRect() {
+      if (
+        this.clickX > this.rectX + 10 &&
+        this.clickX < this.rectX + this.rectWidth - 10 &&
+        this.clickY > this.rectY + 10 &&
+        this.clickY < this.rectY + this.rectHeigth - 10
+      ) {
+        console.log('квадрат');
+      }
+    },
+
+    mousemoveRectEvent() {
+      console.log(this.clickX, this.clickY);
+    },
+
+    mouseupRectEvent() {
+      console.log(this.clickX, this.clickY);
+    },
+
+    mousedownRectEvent() {
+      // this.resetCanvasSample();
 
       if (!this.isRectAdd) {
         this.isRectAdd = true;
 
-        this.settingsStyleRectPreview();
-
-        this.rectWidth = this.startWidhtRect * this.em();
-        this.rectHeigth = this.startHeigthRect * this.em();
-        this.rectX = this.clickX - this.rectWidth / 2;
-        this.rectY = this.clickY - this.rectHeigth / 2;
-
-        this.contextCanvasSample.beginPath();
-        this.contextCanvasSample.rect(
-          this.rectX,
-          this.rectY,
-          this.rectWidth,
-          this.rectHeigth
-        );
-        this.contextCanvasSample.stroke();
+        this.addRect();
       } else if (this.isRectAdd) {
+        this.findAngleRect();
+        this.findRect();
       }
+    },
+
+    addRect() {
+      this.addСoordinatesRect();
+      this.settingsStyleRectPreview();
+
+      this.contextCanvasSample.beginPath();
+      this.contextCanvasSample.rect(
+        this.rectX,
+        this.rectY,
+        this.rectWidth,
+        this.rectHeigth
+      );
+      this.contextCanvasSample.stroke();
+    },
+
+    addСoordinatesRect() {
+      this.rectWidth = this.startWidhtRect * this.em();
+      this.rectHeigth = this.startHeigthRect * this.em();
+      this.rectX = this.clickX - this.rectWidth / 2;
+      this.rectY = this.clickY - this.rectHeigth / 2;
     },
 
     // reset Canvas
@@ -721,6 +785,7 @@ export default {
       this.resetCanvasSample();
       this.polygonPoints = [];
       this.addPointsPreview = 0;
+      this.isRectAdd = false;
     },
 
     handleAddEditor() {
