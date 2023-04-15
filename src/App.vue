@@ -145,22 +145,73 @@
 
                 <!-- input Poligon editor -->
 
-                <div class="mb-6" v-if="isPolyhedronEvent">
-                  <label
-                    for="username"
-                    class="block text-base font-medium leading-6 text-gray-900 mb-1"
-                    >Введите количество полигонов</label
+                <div
+                  class="relative mb-6 inline-block text-left flex items-center justify-end"
+                  v-show="isPolyhedronEvent"
+                >
+                  <div class="mr-2">
+                    <button
+                      @click="isSelectPolygons = !isSelectPolygons"
+                      type="button"
+                      class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                      id="menu-button"
+                    >
+                      Коли-во полигонов
+                      <svg
+                        class="-mr-1 h-5 w-5 text-gray-400"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                  <div class="flex items-center">
+                    <button
+                      type="button"
+                      @click="handlerAddPolyhedronImg"
+                      class="mr-2 rounded-md bg-indigo-600 px-3 py-1 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+                    >
+                      Save
+                    </button>
+                    <button
+                      @click="handlerResetCanas"
+                      type="button"
+                      class="rounded-md bg-white-600 px-3 py-1 text-sm font-semibold text-gray-900 shadow-sm hover:bg-red-600 active:bg-red-600 outline-none"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                  <div
+                    v-show="isSelectPolygons"
+                    class="absolute flex items-center top-10 left-8 z-10 mt-1 h-36 w-28 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-scroll"
+                    role="menu"
+                    aria-orientation="vertical"
+                    aria-labelledby="menu-button"
+                    tabindex="-1"
                   >
-                  <input
-                    type="text"
-                    name="username"
-                    id="username"
-                    autocomplete="..."
-                    class="w-full rounded block ring-1 ring-inset ring-gray-300 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 hover:bg-gray-50"
-                    placeholder="Enter polygons value"
-                    v-model.number="polygonPointsValue"
-                  />
+                    <div class="py-1 text-center" role="none">
+                      <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
+                      <a
+                        v-for="value in polygonPointsValues"
+                        :key="value"
+                        @click="addPolygonPointsValue(value)"
+                        href="#"
+                        class="text-gray-700 block px-4 py-2 text-sm"
+                        role="menuitem"
+                        tabindex="-1"
+                        id="menu-item-0"
+                        >{{ value }}</a
+                      >
+                    </div>
+                  </div>
                 </div>
+
                 <!-- top btn  -->
 
                 <div v-if="isEdit" class="relative flex-1 px-4 sm:px-6 mb-8">
@@ -233,7 +284,7 @@
                         type="button"
                         class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                       >
-                        <LinkIcon
+                        <XCircleIcon
                           class="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400"
                           aria-hidden="true"
                         />
@@ -271,6 +322,7 @@ import {
   XMarkIcon,
   PhotoIcon,
   PencilSquareIcon,
+  XCircleIcon,
 } from '@heroicons/vue/24/outline';
 import {
   LinkIcon,
@@ -290,6 +342,7 @@ export default {
     PencilSquareIcon,
     StarIcon,
     StopIcon,
+    XCircleIcon,
   },
 
   data: () => {
@@ -308,7 +361,9 @@ export default {
       inputTextImg: '',
 
       isPolyhedronEvent: false,
+      isSelectPolygons: false,
       polygonPointsValue: 3,
+      polygonPointsValues: [3, 4, 5, 6, 7, 8],
       addPointsPreview: 0,
       polygonPoints: [],
 
@@ -445,7 +500,7 @@ export default {
       this.clickY = event.offsetY * this.em();
 
       if (this.isTextEvent) {
-        this.fillTextEvent();
+        this.fillTextEventImg();
       } else if (this.isPolyhedronEvent) {
         this.previewPolyhedronPoint();
       } else if (this.isRectangleEvent) {
@@ -464,13 +519,36 @@ export default {
       }
     },
 
-    // events Canvas
-
-    fillTextEvent() {
+    // settings
+    settingsStyleTextPreview() {
       const fsEm = this.em() * this.fontSize;
 
+      this.contextCanvasSample.font = `bold ${fsEm}px Verdana, sans-serif`;
+      this.contextCanvasSample.fillStyle = '#000';
+    },
+
+    settingsStyleTextImg() {
+      const fsEm = this.em() * this.fontSize;
       this.contextCanvasImg.font = `bold ${fsEm}px Verdana, sans-serif`;
       this.contextCanvasImg.fillStyle = '#fff';
+    },
+
+    settingsStylePoligonPreview() {
+      this.contextCanvasSample.lineWidth = this.em() * this.lineWidth;
+      this.contextCanvasSample.strokeStyle = 'blue';
+      this.contextCanvasSample.lineCap = 'round';
+    },
+
+    settingsStylePoligonImg() {
+      this.contextCanvasImg.lineWidth = this.em() * this.lineWidth;
+      this.contextCanvasImg.strokeStyle = '#fff';
+      this.contextCanvasImg.lineCap = 'round';
+    },
+
+    // events Canvas
+
+    fillTextEventImg() {
+      this.settingsStyleTextImg();
 
       this.contextCanvasImg.fillText(
         this.inputTextImg,
@@ -479,15 +557,8 @@ export default {
       );
     },
 
-    // rectEvent() {
-    //   this.contextCanvasImg.strokeRect(this.clickX, this.clickY, 50, 50);
-    // },
-
     previewFillText() {
-      const fsEm = this.em() * this.fontSize;
-
-      this.contextCanvasSample.font = `bold ${fsEm}px Verdana, sans-serif`;
-      this.contextCanvasSample.fillStyle = '#000';
+      this.settingsStyleTextPreview();
 
       this.resetCanvasSample();
 
@@ -496,13 +567,6 @@ export default {
         this.mouseX,
         this.mouseY
       );
-    },
-
-    settingsStylePoligon() {
-      this.contextCanvasSample.strokeStyle = 'green';
-      this.contextCanvasSample.lineCap = 'round';
-
-      this.contextCanvasSample.lineWidth = this.em() * this.lineWidth;
     },
 
     previewPolyhedronPoint() {
@@ -515,17 +579,17 @@ export default {
       }
 
       if (this.polygonPointsValue > this.addPointsPreview) {
-        this.addPolyhedronPoint();
+        this.handlerAddPolyhedronPoint();
       }
     },
 
-    addPolyhedronPoint() {
+    handlerAddPolyhedronPoint() {
       this.contextCanvasSample.beginPath();
       this.contextCanvasSample.moveTo(this.mouseX, this.mouseY);
 
       this.contextCanvasSample.lineTo(this.mouseX, this.mouseY);
 
-      this.settingsStylePoligon();
+      this.settingsStylePoligonPreview();
 
       this.contextCanvasSample.stroke();
 
@@ -549,10 +613,37 @@ export default {
         }
 
         this.contextCanvasSample.closePath();
-        this.settingsStylePoligon();
+        this.settingsStylePoligonPreview();
         this.contextCanvasSample.stroke();
       }
     },
+
+    handlerAddPolyhedronImg() {
+      if (this.polygonPoints.length === this.polygonPointsValue) {
+        this.contextCanvasImg.beginPath();
+
+        this.contextCanvasImg.moveTo(
+          this.polygonPoints[0].x,
+          this.polygonPoints[0].y
+        );
+
+        for (let i = 1; i < this.polygonPointsValue; i++) {
+          this.contextCanvasImg.lineTo(
+            this.polygonPoints[i].x,
+            this.polygonPoints[i].y
+          );
+        }
+
+        this.contextCanvasImg.closePath();
+        this.settingsStylePoligonImg();
+        this.contextCanvasImg.stroke();
+        this.resetCanvasSample();
+      }
+    },
+
+    // rectEvent() {
+    //   this.contextCanvasImg.strokeRect(this.clickX, this.clickY, 50, 50);
+    // },
 
     resetCanvasSample() {
       this.contextCanvasSample.clearRect(
@@ -566,6 +657,12 @@ export default {
     // handler events
     handlerMouseup() {
       //
+    },
+
+    addPolygonPointsValue(value) {
+      this.handlerResetCanas();
+      this.polygonPointsValue = value;
+      this.isSelectPolygons = false;
     },
 
     handlerResetCanas() {
