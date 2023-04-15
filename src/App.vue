@@ -158,7 +158,7 @@
                     autocomplete="..."
                     class="w-full rounded block ring-1 ring-inset ring-gray-300 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 hover:bg-gray-50"
                     placeholder="Enter polygons value"
-                    v-model="polygonPointsValue"
+                    v-model.number="polygonPointsValue"
                   />
                 </div>
                 <!-- top btn  -->
@@ -308,7 +308,8 @@ export default {
       inputTextImg: '',
 
       isPolyhedronEvent: false,
-      polygonPointsValue: '3',
+      polygonPointsValue: 3,
+      addPointsPreview: 0,
       polygonPoints: [],
 
       isRectangleEvent: false,
@@ -319,7 +320,7 @@ export default {
       mouseY: null,
 
       maxWidth: 500,
-
+      lineWidth: 4,
       fontSize: 16,
     };
   },
@@ -459,7 +460,7 @@ export default {
       if (this.isTextEvent) {
         this.previewFillText();
       } else if (this.isPolyhedronEvent) {
-        this.previewPolyhedronEvent();
+        // this.previewPolyhedronEvent();
       }
     },
 
@@ -497,43 +498,61 @@ export default {
       );
     },
 
-    previewPolyhedronPoint() {
-      this.polygonPoints.push({ x: this.mouseX, y: this.mouseY });
+    settingsStylePoligon() {
+      this.contextCanvasSample.strokeStyle = 'green';
+      this.contextCanvasSample.lineCap = 'round';
 
+      this.contextCanvasSample.lineWidth = this.em() * this.lineWidth;
+    },
+
+    previewPolyhedronPoint() {
+      if (this.polygonPoints.length <= this.polygonPointsValue) {
+        this.polygonPoints.push({ x: this.mouseX, y: this.mouseY });
+      }
+
+      if (this.polygonPoints.length === this.polygonPointsValue) {
+        this.previewPolyhedronEvent();
+      }
+
+      if (this.polygonPointsValue > this.addPointsPreview) {
+        this.addPolyhedronPoint();
+      }
+    },
+
+    addPolyhedronPoint() {
       this.contextCanvasSample.beginPath();
       this.contextCanvasSample.moveTo(this.mouseX, this.mouseY);
 
       this.contextCanvasSample.lineTo(this.mouseX, this.mouseY);
 
-      this.contextCanvasSample.strokeStyle = 'green';
-      this.contextCanvasSample.lineWidth = this.em() * 4;
-      this.contextCanvasSample.lineCap = 'round';
+      this.settingsStylePoligon();
 
       this.contextCanvasSample.stroke();
+
+      this.addPointsPreview += 1;
     },
 
-    // previewPolyhedronEvent() {
-    //   this.contextCanvasSample.strokeStyle = 'green';
-    //   this.contextCanvasSample.lineWidth = this.em() * 4;
+    previewPolyhedronEvent() {
+      if (this.polygonPoints.length === this.polygonPointsValue) {
+        this.contextCanvasSample.beginPath();
 
-    //   this.contextCanvasSample.beginPath();
+        this.contextCanvasSample.moveTo(
+          this.polygonPoints[0].x,
+          this.polygonPoints[0].y
+        );
 
-    //   // if (this.polygonPoints.length === 1) {
-    //   this.contextCanvasSample.moveTo(
-    //     this.polygonPoints[0].x,
-    //     this.polygonPoints[0].y
-    //   );
-    //   // } else {
-    //   for (let i = 1; i < this.polygonPointsValue; i++) {
-    //     this.contextCanvasSample.lineTo(
-    //       this.polygonPoints[i].x,
-    //       this.polygonPoints[i].y
-    //     );
-    //   }
-    //   // }
-    //   this.contextCanvasSample.closePath();
-    //   this.contextCanvasSample.stroke();
-    // },
+        for (let i = 1; i < this.polygonPointsValue; i++) {
+          this.contextCanvasSample.lineTo(
+            this.polygonPoints[i].x,
+            this.polygonPoints[i].y
+          );
+        }
+
+        this.contextCanvasSample.closePath();
+        this.settingsStylePoligon();
+        this.contextCanvasSample.stroke();
+      }
+    },
 
     resetCanvasSample() {
       this.contextCanvasSample.clearRect(
@@ -552,6 +571,7 @@ export default {
     handlerResetCanas() {
       this.resetCanvasSample();
       this.polygonPoints = [];
+      this.addPointsPreview = 0;
     },
 
     handleAddEditor() {
