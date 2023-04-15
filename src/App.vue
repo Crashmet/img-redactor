@@ -446,7 +446,7 @@ export default {
       if (this.isTextEvent) {
         this.fillTextEvent();
       } else if (this.isPolyhedronEvent) {
-        this.handlerPreviewPoint();
+        this.previewPolyhedronPoint();
       } else if (this.isRectangleEvent) {
         this.rectEvent();
       }
@@ -497,32 +497,43 @@ export default {
       );
     },
 
-    handlerPreviewPoint() {
+    previewPolyhedronPoint() {
       this.polygonPoints.push({ x: this.mouseX, y: this.mouseY });
-    },
-
-    previewPolyhedronEvent() {
-      this.contextCanvasSample.strokeStyle = 'green';
-      this.contextCanvasSample.lineWidth = this.em() * 3;
 
       this.contextCanvasSample.beginPath();
-      this.contextCanvasSample.moveTo(
-        this.polygonPoints[0].x,
-        this.polygonPoints[0].y
-      );
+      this.contextCanvasSample.moveTo(this.mouseX, this.mouseY);
 
-      if (this.polygonPoints.length > 1) {
-        for (let i = 1; i < this.polygonPointsValue; i++) {
-          this.contextCanvasSample.lineTo(
-            this.polygonPoints[i].x,
-            this.polygonPoints[i].y
-          );
-        }
-      }
+      this.contextCanvasSample.lineTo(this.mouseX, this.mouseY);
 
-      this.contextCanvasSample.closePath();
+      this.contextCanvasSample.strokeStyle = 'green';
+      this.contextCanvasSample.lineWidth = this.em() * 4;
+      this.contextCanvasSample.lineCap = 'round';
+
       this.contextCanvasSample.stroke();
     },
+
+    // previewPolyhedronEvent() {
+    //   this.contextCanvasSample.strokeStyle = 'green';
+    //   this.contextCanvasSample.lineWidth = this.em() * 4;
+
+    //   this.contextCanvasSample.beginPath();
+
+    //   // if (this.polygonPoints.length === 1) {
+    //   this.contextCanvasSample.moveTo(
+    //     this.polygonPoints[0].x,
+    //     this.polygonPoints[0].y
+    //   );
+    //   // } else {
+    //   for (let i = 1; i < this.polygonPointsValue; i++) {
+    //     this.contextCanvasSample.lineTo(
+    //       this.polygonPoints[i].x,
+    //       this.polygonPoints[i].y
+    //     );
+    //   }
+    //   // }
+    //   this.contextCanvasSample.closePath();
+    //   this.contextCanvasSample.stroke();
+    // },
 
     resetCanvasSample() {
       this.contextCanvasSample.clearRect(
