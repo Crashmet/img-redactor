@@ -9,7 +9,7 @@
           Добавляйте надписи или фигуры
         </p>
 
-        <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8">
           <div class="col-span-full">
             <label
               for="cover-photo"
@@ -75,23 +75,21 @@
 
         <div class="fixed inset-0 z-10 overflow-y-auto">
           <div
-            class="flex min-h-full min-w-full items-center justify-center p-4 text-center sm:items-center sm:p-0"
+            class="flex min-h-full min-w-full items-center justify-center p-4 text-center"
           >
             <div
               as="template"
               enter="ease-out duration-300"
-              enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-              enter-to="opacity-100 translate-y-0 sm:scale-100"
+              enter-from="opacity-0 translate-y-4 "
+              enter-to="opacity-100 translate-y-0 "
               leave="ease-in duration-200"
-              leave-from="opacity-100 translate-y-0 sm:scale-100"
-              leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              leave-from="opacity-100 translate-y-0"
+              leave-to="opacity-0 translate-y-4 "
             >
               <div
-                class="relative flex flex-col items-center justify-center transform overflow-hidden rounded-lg bg-white text-center shadow-xl transition-all sm:my-8"
+                class="relative flex flex-col items-center justify-center transform overflow-hidden rounded-lg bg-white text-center shadow-xl transition-all"
               >
-                <div
-                  class="absolute right-0 top-0 -ml-8 flex pr-2 pt-4 sm:-ml-10 sm:pr-4"
-                >
+                <div class="absolute right-0 top-0 -ml-8 flex pr-2 pt-4">
                   <button
                     type="button"
                     class="rounded-md text-gray-300 hover:text-black focus:outline-none focus:ring-2 focus:ring-black"
@@ -102,7 +100,7 @@
                   </button>
                 </div>
 
-                <div class="px-4 sm:px-6 min-w-full">
+                <div class="px-4 min-w-full">
                   <div
                     class="mb-4 mt-4 text-xl font-semibold leading-6 text-gray-900"
                   >
@@ -126,7 +124,7 @@
 
                 <!-- input text editor -->
 
-                <div class="mb-6" v-if="isTextEvent">
+                <div class="mb-6 px-4" v-if="isTextEvent">
                   <label
                     for="username"
                     class="block text-base font-medium leading-6 text-gray-900 mb-1"
@@ -137,7 +135,7 @@
                     name="username"
                     id="username"
                     autocomplete="..."
-                    class="w-full rounded block ring-1 ring-inset ring-gray-300 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 hover:bg-gray-50"
+                    class="w-full rounded block ring-1 ring-inset ring-gray-300 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 sm:text-sm hover:bg-gray-50"
                     placeholder="Enter text"
                     v-model="inputTextImg"
                   />
@@ -146,7 +144,7 @@
                 <!-- input Poligon editor -->
 
                 <div
-                  class="relative mb-6 inline-block text-left flex items-center justify-end"
+                  class="relative px-4 mb-6 inline-block text-left flex items-center justify-end"
                   v-show="isPolyhedronEvent"
                 >
                   <div class="mr-2">
@@ -234,9 +232,9 @@
 
                 <!-- top btn  -->
 
-                <div v-if="isEdit" class="relative flex-1 px-4 sm:px-6 mb-8">
-                  <div class="mt-5 flex lg:ml-4 lg:mt-0">
-                    <span class="hidden sm:block">
+                <div v-if="isEdit" class="relative flex-1 px-4 mb-8">
+                  <div class="mt-5 flex">
+                    <span class="">
                       <button
                         @click="handlerTextButton"
                         type="button"
@@ -250,7 +248,7 @@
                       </button>
                     </span>
 
-                    <span class="ml-3 hidden sm:block">
+                    <span class="ml-3">
                       <button
                         @click="handlerPolyhedronButton"
                         type="button"
@@ -264,7 +262,7 @@
                       </button>
                     </span>
 
-                    <span class="ml-3 hidden sm:block">
+                    <span class="ml-3">
                       <button
                         @click="handlerRectangleButton"
                         type="button"
@@ -282,9 +280,9 @@
 
                 <!-- bottom btn  -->
 
-                <div class="relative flex-1 px-4 sm:px-6 mb-8">
-                  <div class="mt-5 flex lg:ml-4 lg:mt-0">
-                    <span class="hidden sm:block">
+                <div class="relative flex-1 px-4 mb-8">
+                  <div class="mt-5 flex">
+                    <span class="">
                       <button
                         type="button"
                         @click="handleAddEditor"
@@ -298,11 +296,11 @@
                       </button>
                     </span>
 
-                    <span class="ml-3 hidden sm:block">
+                    <span class="ml-3">
                       <button
                         @click="handlerResetImg"
                         type="button"
-                        class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                        class="inline-flex mr-3 items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                       >
                         <XCircleIcon
                           class="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400"
@@ -312,7 +310,7 @@
                       </button>
                     </span>
 
-                    <span class="sm:ml-3">
+                    <span class="">
                       <button
                         @click="handleSaveImage"
                         type="button"
