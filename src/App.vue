@@ -434,7 +434,7 @@ export default {
   computed: {},
 
   methods: {
-    // downoland img
+    // *** DOWNOLAND and SET IMG ***
 
     previewThumbnail(event) {
       this.handleFiles(event.target.files);
@@ -479,7 +479,7 @@ export default {
       this.imageCanvas.src = e.target.result;
     },
 
-    //  Drag and drop
+    // *** DRAG AND DROP ***
 
     onDragEnter(e) {
       e.stopPropagation();
@@ -499,7 +499,8 @@ export default {
       }
     },
 
-    // canvas mouse event
+    // *** CANVAS MOUSE EVENT ***
+
     handleMousedownSample(event) {
       this.isMousedown = true;
 
@@ -542,7 +543,8 @@ export default {
       }
     },
 
-    // settings canvas figure
+    // *** SETTINGS CANVAS FIGURES ***
+
     settingsStyleTextPreview() {
       const fsEm = this.em() * this.fontSize;
 
@@ -583,9 +585,9 @@ export default {
       this.contextCanvasImg.strokeStyle = '#fff';
     },
 
-    // events Canvas
+    // *** EVENTS CANVAS ***
 
-    // texr events
+    // *** TEXT EVENTS ***
 
     fillTextEventImg() {
       this.settingsStyleTextImg();
@@ -609,10 +611,17 @@ export default {
       );
     },
 
-    // polyhedron events
+    // *** POLYHEDRON EVENTS ***
 
     mousedownPolyhedronEvent() {
       this.previewPolyhedronPoint();
+
+      if (
+        this.polygonPoints.length === this.polygonPointsValue &&
+        this.isPreviewPolyhedronFlag
+      ) {
+        this.previewPolyhedronEvent();
+      }
     },
 
     addPolygonPointsValue(value) {
@@ -621,20 +630,17 @@ export default {
       this.isSelectPolygons = false;
     },
 
+    pushPolyhedronCoordinates() {
+      this.polygonPoints.push({ x: this.mouseX, y: this.mouseY });
+    },
+
     previewPolyhedronPoint() {
       if (this.polygonPointsValue > this.addPointsPreview) {
         this.handlerAddPolyhedronPoint();
       }
 
       if (this.polygonPoints.length < this.polygonPointsValue) {
-        this.polygonPoints.push({ x: this.mouseX, y: this.mouseY });
-      }
-
-      if (
-        this.polygonPoints.length === this.polygonPointsValue &&
-        this.isPreviewPolyhedronFlag
-      ) {
-        this.previewPolyhedronEvent();
+        this.pushPolyhedronCoordinates();
       }
     },
 
@@ -696,7 +702,7 @@ export default {
       }
     },
 
-    // rectenle event
+    // ***  RECTENLE EVENT  ***
 
     findPolygonsRect() {
       if (
@@ -751,6 +757,7 @@ export default {
 
       this.addRectPreview();
     },
+
     handlerPolygonRectRT() {
       this.rectWidth = this.mouseX - this.rectX;
       this.rectHeigth = this.rectY + this.rectHeigth - this.mouseY;
@@ -758,12 +765,14 @@ export default {
 
       this.addRectPreview();
     },
+
     handlerPolygonRectRB() {
       this.rectWidth = this.mouseX - this.rectX;
       this.rectHeigth = this.mouseY - this.rectY;
 
       this.addRectPreview();
     },
+
     handlerPolygonRectLB() {
       this.rectWidth += this.rectX - this.mouseX;
       this.rectHeigth = this.mouseY - this.rectY;
@@ -836,14 +845,7 @@ export default {
       this.contextCanvasImg.stroke();
     },
 
-    // handler events
-
-    handleAddEditor() {
-      this.isEdit = !this.isEdit;
-      this.isTextEvent = false;
-      this.isPolyhedronEvent = false;
-      this.isRectangleEvent = false;
-    },
+    // *** HANDLER EVENTS ***
 
     handleSaveImage() {
       const link = document.createElement('a');
@@ -851,6 +853,13 @@ export default {
       link.href = this.canvasImg.toDataURL();
       link.click();
       link.remove();
+    },
+
+    handleAddEditor() {
+      this.isEdit = !this.isEdit;
+      this.isTextEvent = false;
+      this.isPolyhedronEvent = false;
+      this.isRectangleEvent = false;
     },
 
     handlerTextButton() {
@@ -871,7 +880,7 @@ export default {
       this.isPolyhedronEvent = false;
     },
 
-    // clear event
+    // *** CLEAR EVENT ***
 
     resetCanvasSample() {
       this.contextCanvasSample.clearRect(
