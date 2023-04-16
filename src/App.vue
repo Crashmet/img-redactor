@@ -435,13 +435,19 @@ export default {
 
     // *** DESKTOP EVENT***
 
-    this.canvasSample.addEventListener('mousedown', this.handleMousedownSample);
-    this.canvasSample.addEventListener('mousemove', this.handleMousemoveSample);
     this.canvasSample.addEventListener(
-      'mouseleave',
+      'pointerdown',
+      this.handleMousedownSample
+    );
+    this.canvasSample.addEventListener(
+      'pointermove',
+      this.handleMousemoveSample
+    );
+    this.canvasSample.addEventListener(
+      'pointerleave',
       this.handleMouseleaveSample
     );
-    this.canvasSample.addEventListener('mouseup', this.handlerMouseupSample);
+    this.canvasSample.addEventListener('pointerup', this.handlerMouseupSample);
 
     // *** MOBILE EVENT ***
 
@@ -452,6 +458,8 @@ export default {
     this.canvasSample.addEventListener('touchmove', this.handleMousemoveSample);
     this.canvasSample.addEventListener('touchend', this.handleMouseleaveSample);
     this.canvasSample.addEventListener('touchend', this.handlerMouseupSample);
+
+    // *** MOBILE EVENT ***
   },
 
   computed: {},
