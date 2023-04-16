@@ -414,6 +414,7 @@ export default {
       mouseY: null,
       isMousedown: false,
 
+      em: 1,
       maxWidth: null,
       maxHeight: null,
       lineWidth: 4,
@@ -422,8 +423,8 @@ export default {
   },
 
   created() {
-    this.maxWidth = window.screen.width * 0.4;
-    this.maxHeight = window.screen.height * 0.4;
+    this.maxWidth = window.screen.width * 0.85;
+    this.maxHeight = window.screen.height * 0.5;
   },
 
   mounted() {
@@ -497,7 +498,8 @@ export default {
         this.canvasSample.width = this.imageCanvas.width;
         this.canvasSample.height = this.imageCanvas.height;
 
-        this.canvasImg.style.maxHeight = `${this.maxHeight}px`;
+        this.addSizeCanvas();
+
         this.contextCanvasImg.drawImage(this.imageCanvas, 0, 0);
 
         this.addStartTextPosition();
@@ -533,8 +535,8 @@ export default {
 
       this.isMousedown = true;
 
-      this.clickX = event.offsetX * this.em();
-      this.clickY = event.offsetY * this.em();
+      this.clickX = event.offsetX * this.em;
+      this.clickY = event.offsetY * this.em;
 
       if (this.isTextEvent) {
         this.mousedownTextEvent();
@@ -554,8 +556,8 @@ export default {
     },
 
     handleMousemoveSample() {
-      this.mouseX = event.offsetX * this.em();
-      this.mouseY = event.offsetY * this.em();
+      this.mouseX = event.offsetX * this.em;
+      this.mouseY = event.offsetY * this.em;
 
       if (this.isTextEvent) {
         this.mousemoveTextEvent();
@@ -567,7 +569,7 @@ export default {
     // *** SETTINGS CANVAS FIGURES ***
 
     settingsStyleTextPreview() {
-      const fsEm = this.em() * this.fontSize;
+      const fsEm = this.em * this.fontSize;
 
       this.contextCanvasSample.font = `bold ${fsEm}px Verdana, sans-serif`;
       this.contextCanvasSample.textAlign = 'center';
@@ -576,7 +578,7 @@ export default {
     },
 
     settingsStyleTextImg() {
-      const fsEm = this.em() * this.fontSize;
+      const fsEm = this.em * this.fontSize;
       this.contextCanvasImg.font = `bold ${fsEm}px Verdana, sans-serif`;
       this.contextCanvasImg.textAlign = 'center';
       this.contextCanvasImg.textBaseline = 'middle';
@@ -584,25 +586,25 @@ export default {
     },
 
     settingsStylePoligonPreview() {
-      this.contextCanvasSample.lineWidth = this.em() * this.lineWidth - 1;
+      this.contextCanvasSample.lineWidth = this.em * this.lineWidth - 1;
       this.contextCanvasSample.strokeStyle = 'rgba(255, 255, 255, 0.75)';
-      this.contextCanvasSample.setLineDash([this.em() * 5, this.em() * 10]);
+      this.contextCanvasSample.setLineDash([this.em * 5, this.em * 10]);
       this.contextCanvasSample.lineCap = 'round';
     },
 
     settingsStylePoligonImg() {
-      this.contextCanvasImg.lineWidth = this.em() * this.lineWidth;
+      this.contextCanvasImg.lineWidth = this.em * this.lineWidth;
       this.contextCanvasImg.strokeStyle = '#fff';
     },
 
     settingsStyleRectPreview() {
-      this.contextCanvasSample.lineWidth = this.em() * this.lineWidth - 1;
+      this.contextCanvasSample.lineWidth = this.em * this.lineWidth - 1;
       this.contextCanvasSample.strokeStyle = 'rgba(255, 255, 255, 0.75)';
-      this.contextCanvasSample.setLineDash([this.em() * 5, this.em() * 10]);
+      this.contextCanvasSample.setLineDash([this.em * 5, this.em * 10]);
     },
 
     settingsStyleRectImg() {
-      this.contextCanvasImg.lineWidth = this.em() * this.lineWidth;
+      this.contextCanvasImg.lineWidth = this.em * this.lineWidth;
       this.contextCanvasImg.strokeStyle = '#fff';
     },
 
@@ -633,10 +635,10 @@ export default {
 
     isPreviewTextCoordinates() {
       if (
-        this.mouseX > this.textX - this.em() * 30 &&
-        this.mouseX < this.textX + this.em() * 30 &&
-        this.mouseY > this.textY - this.em() * 30 &&
-        this.mouseY < this.textY + this.em() * 30
+        this.mouseX > this.textX - this.em * 30 &&
+        this.mouseX < this.textX + this.em * 30 &&
+        this.mouseY > this.textY - this.em * 30 &&
+        this.mouseY < this.textY + this.em * 30
       ) {
         return true;
       } else {
@@ -762,31 +764,31 @@ export default {
 
     findPolygonsRect() {
       if (
-        this.mouseX < this.rectX + this.em() * 35 &&
-        this.mouseX > this.rectX - this.em() * 15 &&
-        this.mouseY < this.rectY + this.em() * 35 &&
-        this.mouseY > this.rectY - this.em() * 15
+        this.mouseX < this.rectX + this.em * 35 &&
+        this.mouseX > this.rectX - this.em * 15 &&
+        this.mouseY < this.rectY + this.em * 35 &&
+        this.mouseY > this.rectY - this.em * 15
       ) {
         this.handlerPolygonRectLT();
       } else if (
-        this.mouseX < this.rectX + this.rectWidth + this.em() * 15 &&
-        this.mouseX > this.rectX + this.rectWidth - this.em() * 35 &&
-        this.mouseY < this.rectY + this.em() * 15 &&
-        this.mouseY > this.rectY - this.em() * 35
+        this.mouseX < this.rectX + this.rectWidth + this.em * 15 &&
+        this.mouseX > this.rectX + this.rectWidth - this.em * 35 &&
+        this.mouseY < this.rectY + this.em * 15 &&
+        this.mouseY > this.rectY - this.em * 35
       ) {
         this.handlerPolygonRectRT();
       } else if (
-        this.mouseX < this.rectX + this.rectWidth + this.em() * 15 &&
-        this.mouseX > this.rectX + this.rectWidth - this.em() * 35 &&
-        this.mouseY < this.rectY + this.rectHeigth + this.em() * 15 &&
-        this.mouseY > this.rectY + this.rectHeigth - this.em() * 35
+        this.mouseX < this.rectX + this.rectWidth + this.em * 15 &&
+        this.mouseX > this.rectX + this.rectWidth - this.em * 35 &&
+        this.mouseY < this.rectY + this.rectHeigth + this.em * 15 &&
+        this.mouseY > this.rectY + this.rectHeigth - this.em * 35
       ) {
         this.handlerPolygonRectRB();
       } else if (
-        this.mouseX < this.rectX + this.em() * 35 &&
-        this.mouseX > this.rectX - this.em() * 15 &&
-        this.mouseY < this.rectY + this.rectHeigth + this.em() * 35 &&
-        this.mouseY > this.rectY + this.rectHeigth - this.em() * 15
+        this.mouseX < this.rectX + this.em * 35 &&
+        this.mouseX > this.rectX - this.em * 15 &&
+        this.mouseY < this.rectY + this.rectHeigth + this.em * 35 &&
+        this.mouseY > this.rectY + this.rectHeigth - this.em * 15
       ) {
         this.handlerPolygonRectLB();
       }
@@ -794,10 +796,10 @@ export default {
 
     isFindRect() {
       if (
-        this.mouseX > this.rectX + this.em() * 15 &&
-        this.mouseX < this.rectX + this.rectWidth - this.em() * 15 &&
-        this.mouseY > this.rectY + this.em() * 15 &&
-        this.mouseY < this.rectY + this.rectHeigth - this.em() * 15
+        this.mouseX > this.rectX + this.em * 15 &&
+        this.mouseX < this.rectX + this.rectWidth - this.em * 15 &&
+        this.mouseY > this.rectY + this.em * 15 &&
+        this.mouseY < this.rectY + this.rectHeigth - this.em * 15
       ) {
         return true;
       } else {
@@ -871,8 +873,8 @@ export default {
     },
 
     addStartСoordinatesRect() {
-      this.rectWidth = (this.startWidhtRect / 2) * this.em();
-      this.rectHeigth = (this.startHeigthRect / 2) * this.em();
+      this.rectWidth = (this.startWidhtRect / 2) * this.em;
+      this.rectHeigth = (this.startHeigthRect / 2) * this.em;
       this.rectX = this.clickX - this.rectWidth / 2;
       this.rectY = this.clickY - this.rectHeigth / 2;
     },
@@ -976,10 +978,32 @@ export default {
     },
 
     // converter
-    em() {
-      return this.canvasImg.height > this.maxHeight
-        ? this.canvasImg.height / this.maxHeight
-        : 1;
+
+    addSizeCanvas() {
+      if (
+        this.imageCanvas.width > this.imageCanvas.height &&
+        window.screen.height > window.screen.width
+      ) {
+        this.canvasImg.style.maxWidth = `${this.maxWidth}px`;
+        this.emX();
+      } else {
+        this.canvasImg.style.maxHeight = `${this.maxHeight}px`;
+        this.emY();
+      }
+    },
+
+    emX() {
+      this.em =
+        this.canvasImg.width > this.maxWidth
+          ? this.canvasImg.width / this.maxWidth
+          : 1;
+    },
+
+    emY() {
+      this.em =
+        this.canvasImg.height > this.maxHeight
+          ? this.canvasImg.height / this.maxHeight
+          : 1;
     },
   },
   watch: {
