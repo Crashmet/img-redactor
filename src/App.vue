@@ -369,8 +369,8 @@ export default {
 
       isRectangleEvent: false,
       isRectAdd: false,
-      startWidhtRect: 50,
-      startHeigthRect: 50,
+      startWidhtRect: 100,
+      startHeigthRect: 100,
       rectWidth: null,
       rectHeigth: null,
       rectX: null,
@@ -380,6 +380,7 @@ export default {
       clickY: null,
       mouseX: null,
       mouseY: null,
+      isMousedown: false,
 
       maxWidth: 500,
       lineWidth: 4,
@@ -510,6 +511,8 @@ export default {
 
     // canvas mouse event
     handleMousedownSample(event) {
+      this.isMousedown = true;
+
       this.clickX = event.offsetX * this.em();
       this.clickY = event.offsetY * this.em();
 
@@ -523,6 +526,8 @@ export default {
     },
 
     handlerMouseupSample() {
+      this.isMousedown = false;
+
       if (this.isRectangleEvent) {
         this.mouseupRectEvent();
       }
@@ -534,7 +539,7 @@ export default {
 
       if (this.isTextEvent) {
         this.previewFillText();
-      } else if (this.isRectangleEvent) {
+      } else if (this.isRectAdd && this.isRectangleEvent) {
         this.mousemoveRectEvent();
       }
     },
@@ -712,17 +717,21 @@ export default {
 
     findRect() {
       if (
-        this.clickX > this.rectX + 10 &&
-        this.clickX < this.rectX + this.rectWidth - 10 &&
-        this.clickY > this.rectY + 10 &&
-        this.clickY < this.rectY + this.rectHeigth - 10
+        this.mouseX > this.rectX + 10 &&
+        this.mouseX < this.rectX + this.rectWidth - 10 &&
+        this.mouseY > this.rectY + 10 &&
+        this.mouseY < this.rectY + this.rectHeigth - 10
       ) {
-        console.log('квадрат');
+        return true;
+      } else {
+        return false;
       }
     },
 
     mousemoveRectEvent() {
-      console.log(this.clickX, this.clickY);
+      if (this.findRect() && this.isMousedown) {
+        this.addRect();
+      }
     },
 
     mouseupRectEvent() {
@@ -730,11 +739,7 @@ export default {
     },
 
     mousedownRectEvent() {
-      // this.resetCanvasSample();
-
       if (!this.isRectAdd) {
-        this.isRectAdd = true;
-
         this.addRect();
       } else if (this.isRectAdd) {
         this.findAngleRect();
@@ -743,6 +748,7 @@ export default {
     },
 
     addRect() {
+      this.handlerResetCanas();
       this.addСoordinatesRect();
       this.settingsStyleRectPreview();
 
@@ -754,13 +760,15 @@ export default {
         this.rectHeigth
       );
       this.contextCanvasSample.stroke();
+
+      this.isRectAdd = true;
     },
 
     addСoordinatesRect() {
-      this.rectWidth = this.startWidhtRect * this.em();
-      this.rectHeigth = this.startHeigthRect * this.em();
-      this.rectX = this.clickX - this.rectWidth / 2;
-      this.rectY = this.clickY - this.rectHeigth / 2;
+      this.rectWidth = (this.startWidhtRect / 2) * this.em();
+      this.rectHeigth = (this.startHeigthRect / 2) * this.em();
+      this.rectX = this.mouseX - this.rectWidth / 2;
+      this.rectY = this.mouseY - this.rectHeigth / 2;
     },
 
     // reset Canvas
