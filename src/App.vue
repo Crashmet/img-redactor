@@ -388,8 +388,8 @@ export default {
       isTextEvent: false,
       isTextAdd: false,
       inputTextImg: '',
-      textX: 50,
-      textY: 50,
+      textX: 100,
+      textY: 100,
 
       isPolyhedronEvent: false,
       isSelectPolygons: false,
@@ -497,6 +497,8 @@ export default {
 
         this.canvasImg.style.maxWidth = `${this.maxWidth}px`;
         this.contextCanvasImg.drawImage(this.imageCanvas, 0, 0);
+
+        this.addStartTextPosition();
       };
 
       this.imageCanvas.src = e.target.result;
@@ -603,6 +605,11 @@ export default {
     // *** EVENTS CANVAS ***
 
     // *** TEXT EVENTS ***
+
+    addStartTextPosition() {
+      this.textX = this.canvasImg.width / 2;
+      this.textY = this.canvasImg.height / 2;
+    },
 
     mousedownTextEvent() {
       if (!this.isTextAdd) {
