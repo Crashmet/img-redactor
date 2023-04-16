@@ -693,35 +693,39 @@ export default {
 
     // rectenle event
 
-    findAngleRect() {
+    findPolygonsRect() {
       if (
-        this.clickX < this.rectX + 9 &&
-        this.clickX > this.rectX - 9 &&
-        this.clickY < this.rectY + 9 &&
-        this.clickY > this.rectY - 9
+        this.mouseX < this.rectX + 9 &&
+        this.mouseX > this.rectX - 9 &&
+        this.mouseY < this.rectY + 9 &&
+        this.mouseY > this.rectY - 9
       ) {
         console.log('лево верх');
+        this.handlerPolygonRectLT();
       } else if (
-        this.clickX < this.rectX + this.rectWidth + 9 &&
-        this.clickX > this.rectX + this.rectWidth - 9 &&
-        this.clickY < this.rectY + 9 &&
-        this.clickY > this.rectY - 9
+        this.mouseX < this.rectX + this.rectWidth + 9 &&
+        this.mouseX > this.rectX + this.rectWidth - 9 &&
+        this.mouseY < this.rectY + 9 &&
+        this.mouseY > this.rectY - 9
       ) {
         console.log('право верх');
+        this.handlerPolygonRectRT();
       } else if (
-        this.clickX < this.rectX + this.rectWidth + 9 &&
-        this.clickX > this.rectX + this.rectWidth - 9 &&
-        this.clickY < this.rectY + this.rectHeigth + 9 &&
-        this.clickY > this.rectY + this.rectHeigth - 9
+        this.mouseX < this.rectX + this.rectWidth + 9 &&
+        this.mouseX > this.rectX + this.rectWidth - 9 &&
+        this.mouseY < this.rectY + this.rectHeigth + 9 &&
+        this.mouseY > this.rectY + this.rectHeigth - 9
       ) {
         console.log('право низ');
+        this.handlerPolygonRectRB();
       } else if (
-        this.clickX < this.rectX + 9 &&
-        this.clickX > this.rectX - 9 &&
-        this.clickY < this.rectY + this.rectHeigth + 9 &&
-        this.clickY > this.rectY + this.rectHeigth - 9
+        this.mouseX < this.rectX + 9 &&
+        this.mouseX > this.rectX - 9 &&
+        this.mouseY < this.rectY + this.rectHeigth + 9 &&
+        this.mouseY > this.rectY + this.rectHeigth - 9
       ) {
         console.log('лево низ');
+        this.handlerPolygonRectLB();
       }
     },
 
@@ -738,9 +742,42 @@ export default {
       }
     },
 
+    handlerPolygonRectLT() {
+      this.rectWidth += this.rectX - this.mouseX;
+      this.rectHeigth += this.rectY - this.mouseY;
+      this.rectX = this.mouseX;
+      this.rectY = this.mouseY;
+
+      this.addRectPreview();
+    },
+    handlerPolygonRectRT() {
+      this.rectWidth = this.mouseX - this.rectX;
+      this.rectHeigth = this.rectY + this.rectHeigth - this.mouseY;
+      this.rectY += this.mouseY - this.rectY;
+
+      this.addRectPreview();
+    },
+    handlerPolygonRectRB() {
+      this.rectWidth = this.mouseX - this.rectX;
+      this.rectHeigth = this.mouseY - this.rectY;
+
+      this.addRectPreview();
+    },
+    handlerPolygonRectLB() {
+      this.rectWidth += this.rectX - this.mouseX;
+      this.rectHeigth = this.mouseY - this.rectY;
+      this.rectX = this.mouseX;
+
+      this.addRectPreview();
+    },
+
     mousemoveRectEvent() {
       if (this.isRectAdd && this.findRect() && this.isMousedown) {
-        this.addRect();
+        this.addСoordinatesRect();
+        console.log('kavadrat!');
+        this.addRectPreview();
+      } else if (this.isRectAdd && this.isMousedown) {
+        this.findPolygonsRect();
       }
     },
 
@@ -750,15 +787,14 @@ export default {
 
     mousedownRectEvent() {
       if (!this.isRectAdd) {
-        this.addRect();
-      } else if (this.isRectAdd) {
-        this.findAngleRect();
+        this.addStartСoordinatesRect();
+        this.addRectPreview();
       }
     },
 
-    addRect() {
+    addRectPreview() {
       this.handlerResetCanas();
-      this.addСoordinatesRect();
+
       this.settingsStyleRectPreview();
 
       this.contextCanvasSample.beginPath();
@@ -773,9 +809,16 @@ export default {
       this.isRectAdd = true;
     },
 
-    addСoordinatesRect() {
+    addStartСoordinatesRect() {
       this.rectWidth = (this.startWidhtRect / 2) * this.em();
       this.rectHeigth = (this.startHeigthRect / 2) * this.em();
+      this.rectX = this.clickX - this.rectWidth / 2;
+      this.rectY = this.clickY - this.rectHeigth / 2;
+    },
+
+    addСoordinatesRect() {
+      this.rectWidth = this.rectWidth;
+      this.rectHeigth = this.rectHeigth;
       this.rectX = this.mouseX - this.rectWidth / 2;
       this.rectY = this.mouseY - this.rectHeigth / 2;
     },
