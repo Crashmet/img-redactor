@@ -131,7 +131,7 @@
                       id="username"
                       autocomplete="..."
                       class="mr-4 w-32 rounded block ring-1 ring-inset ring-gray-300 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 sm:text-sm hover:bg-gray-50"
-                      placeholder="Enter text"
+                      placeholder="Введите текст..."
                       v-model="inputTextImg"
                     />
                   </div>
@@ -292,7 +292,7 @@
 
                 <div class="relative flex-1 px-4 mb-8">
                   <div class="flex">
-                    <span class="">
+                    <span class="mr-3">
                       <button
                         type="button"
                         @click="handleAddEditor"
@@ -306,21 +306,7 @@
                       </button>
                     </span>
 
-                    <span class="ml-3">
-                      <button
-                        @click="handlerResetImg"
-                        type="button"
-                        class="inline-flex mr-3 items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                      >
-                        <XCircleIcon
-                          class="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400"
-                          aria-hidden="true"
-                        />
-                        Reset
-                      </button>
-                    </span>
-
-                    <span class="">
+                    <span class="mr-3">
                       <button
                         @click="handleSaveImage"
                         type="button"
@@ -331,6 +317,20 @@
                           aria-hidden="true"
                         />
                         Publish
+                      </button>
+                    </span>
+
+                    <span class="">
+                      <button
+                        @click="handlerResetImg"
+                        type="button"
+                        class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                      >
+                        <XCircleIcon
+                          class="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400"
+                          aria-hidden="true"
+                        />
+                        Reset
                       </button>
                     </span>
                   </div>
