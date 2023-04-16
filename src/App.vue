@@ -423,7 +423,7 @@ export default {
 
   created() {
     this.maxWidth = window.screen.width * 0.4;
-    this.maxHeight = window.screen.height * 0.8;
+    this.maxHeight = window.screen.height * 0.4;
   },
 
   mounted() {
@@ -497,7 +497,7 @@ export default {
         this.canvasSample.width = this.imageCanvas.width;
         this.canvasSample.height = this.imageCanvas.height;
 
-        this.canvasImg.style.maxWidth = `${this.maxWidth}px`;
+        this.canvasImg.style.maxHeight = `${this.maxHeight}px`;
         this.contextCanvasImg.drawImage(this.imageCanvas, 0, 0);
 
         this.addStartTextPosition();
@@ -977,8 +977,8 @@ export default {
 
     // converter
     em() {
-      return this.canvasImg.width > this.maxWidth
-        ? this.canvasImg.width / this.maxWidth
+      return this.canvasImg.height > this.maxHeight
+        ? this.canvasImg.height / this.maxHeight
         : 1;
     },
   },
