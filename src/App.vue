@@ -106,7 +106,7 @@
                   <div
                     class="mb-4 mt-4 text-xl font-semibold leading-6 text-gray-900"
                   >
-                    Panel IMG
+                    Panel
                   </div>
                 </div>
                 <!-- IMG -->
@@ -175,14 +175,14 @@
                     <button
                       type="button"
                       @click="handlerAddPolyhedronImg"
-                      class="mr-2 rounded-md bg-indigo-600 px-3 py-1 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+                      class="mr-2 rounded-md bg-indigo-600 px-3 py-1 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 ring-1 ring-black ring-opacity-5 focus:outline-none"
                     >
                       Save
                     </button>
                     <button
                       @click="handlerResetCanas"
                       type="button"
-                      class="rounded-md bg-white-600 px-3 py-1 text-sm font-semibold text-gray-900 shadow-sm hover:bg-red-600 active:bg-red-600 outline-none"
+                      class="rounded-md bg-white-600 px-3 py-1 text-sm font-semibold text-gray-900 shadow-sm hover:bg-red-700 hover:text-white active:bg-red-600 active:text-white outline-none ring-1 ring-black ring-opacity-5 focus:outline-none"
                     >
                       Cancel
                     </button>
@@ -226,7 +226,7 @@
                   <button
                     @click="handlerResetCanas"
                     type="button"
-                    class="rounded-md bg-white-600 px-3 py-1 text-sm font-semibold text-gray-900 shadow-sm hover:bg-red-600 active:bg-red-600 outline-none"
+                    class="rounded-md bg-white-600 px-3 py-1 text-sm font-semibold text-gray-900 shadow-sm hover:bg-red-700 hover:text-white active:bg-red-600 active:text-white outline-none ring-1 ring-black ring-opacity-5 focus:outline-none"
                   >
                     Cancel
                   </button>
@@ -300,7 +300,7 @@
 
                     <span class="ml-3 hidden sm:block">
                       <button
-                        @click="handlerResetCanas"
+                        @click="handlerResetImg"
                         type="button"
                         class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                       >
@@ -434,37 +434,6 @@ export default {
   computed: {},
 
   methods: {
-    // clear event
-
-    handlerTextButton() {
-      this.isTextEvent = !this.isTextEvent;
-      this.isPolyhedronEvent = false;
-      this.isRectangleEvent = false;
-    },
-
-    handlerPolyhedronButton() {
-      this.isPolyhedronEvent = !this.isPolyhedronEvent;
-      this.isTextEvent = false;
-      this.isRectangleEvent = false;
-    },
-
-    handlerRectangleButton() {
-      this.isRectangleEvent = !this.isRectangleEvent;
-      this.isTextEvent = false;
-      this.isPolyhedronEvent = false;
-    },
-
-    clear() {
-      // this.imageCanvas = null;
-      // this.canvasImg.width = this.canvasImg.width;
-      // this.canvasSample.width = this.canvasSample.width;
-      this.isLoading = false;
-      this.isTextEvent = false;
-      this.isPolyhedronEvent = false;
-      this.isRectangleEvent = false;
-      location.reload();
-    },
-
     // downoland img
 
     previewThumbnail(event) {
@@ -646,6 +615,12 @@ export default {
       this.previewPolyhedronPoint();
     },
 
+    addPolygonPointsValue(value) {
+      this.handlerResetCanas();
+      this.polygonPointsValue = value;
+      this.isSelectPolygons = false;
+    },
+
     previewPolyhedronPoint() {
       if (this.polygonPointsValue > this.addPointsPreview) {
         this.handlerAddPolyhedronPoint();
@@ -725,30 +700,30 @@ export default {
 
     findPolygonsRect() {
       if (
-        this.mouseX < this.rectX + this.em() * 15 &&
+        this.mouseX < this.rectX + this.em() * 35 &&
         this.mouseX > this.rectX - this.em() * 15 &&
-        this.mouseY < this.rectY + this.em() * 15 &&
+        this.mouseY < this.rectY + this.em() * 35 &&
         this.mouseY > this.rectY - this.em() * 15
       ) {
         this.handlerPolygonRectLT();
       } else if (
         this.mouseX < this.rectX + this.rectWidth + this.em() * 15 &&
-        this.mouseX > this.rectX + this.rectWidth - this.em() * 15 &&
+        this.mouseX > this.rectX + this.rectWidth - this.em() * 35 &&
         this.mouseY < this.rectY + this.em() * 15 &&
-        this.mouseY > this.rectY - this.em() * 15
+        this.mouseY > this.rectY - this.em() * 35
       ) {
         this.handlerPolygonRectRT();
       } else if (
         this.mouseX < this.rectX + this.rectWidth + this.em() * 15 &&
-        this.mouseX > this.rectX + this.rectWidth - this.em() * 15 &&
+        this.mouseX > this.rectX + this.rectWidth - this.em() * 35 &&
         this.mouseY < this.rectY + this.rectHeigth + this.em() * 15 &&
-        this.mouseY > this.rectY + this.rectHeigth - this.em() * 15
+        this.mouseY > this.rectY + this.rectHeigth - this.em() * 35
       ) {
         this.handlerPolygonRectRB();
       } else if (
-        this.mouseX < this.rectX + this.em() * 15 &&
+        this.mouseX < this.rectX + this.em() * 35 &&
         this.mouseX > this.rectX - this.em() * 15 &&
-        this.mouseY < this.rectY + this.rectHeigth + this.em() * 15 &&
+        this.mouseY < this.rectY + this.rectHeigth + this.em() * 35 &&
         this.mouseY > this.rectY + this.rectHeigth - this.em() * 15
       ) {
         this.handlerPolygonRectLB();
@@ -861,31 +836,7 @@ export default {
       this.contextCanvasImg.stroke();
     },
 
-    // reset Canvas
-
-    resetCanvasSample() {
-      this.contextCanvasSample.clearRect(
-        0,
-        0,
-        this.contextCanvasSample.canvas.width,
-        this.contextCanvasSample.canvas.height
-      );
-    },
-
     // handler events
-    addPolygonPointsValue(value) {
-      this.handlerResetCanas();
-      this.polygonPointsValue = value;
-      this.isSelectPolygons = false;
-    },
-
-    handlerResetCanas() {
-      this.resetCanvasSample();
-      this.polygonPoints = [];
-      this.addPointsPreview = 0;
-      this.isRectAdd = false;
-      this.isPreviewPolyhedronFlag = true;
-    },
 
     handleAddEditor() {
       this.isEdit = !this.isEdit;
@@ -902,6 +853,60 @@ export default {
       link.remove();
     },
 
+    handlerTextButton() {
+      this.isTextEvent = !this.isTextEvent;
+      this.isPolyhedronEvent = false;
+      this.isRectangleEvent = false;
+    },
+
+    handlerPolyhedronButton() {
+      this.isPolyhedronEvent = !this.isPolyhedronEvent;
+      this.isTextEvent = false;
+      this.isRectangleEvent = false;
+    },
+
+    handlerRectangleButton() {
+      this.isRectangleEvent = !this.isRectangleEvent;
+      this.isTextEvent = false;
+      this.isPolyhedronEvent = false;
+    },
+
+    // clear event
+
+    resetCanvasSample() {
+      this.contextCanvasSample.clearRect(
+        0,
+        0,
+        this.contextCanvasSample.canvas.width,
+        this.contextCanvasSample.canvas.height
+      );
+    },
+
+    handlerResetCanas() {
+      this.resetCanvasSample();
+      this.polygonPoints = [];
+      this.addPointsPreview = 0;
+      this.isRectAdd = false;
+      this.isPreviewPolyhedronFlag = true;
+    },
+
+    handlerResetImg() {
+      this.contextCanvasImg.drawImage(this.imageCanvas, 0, 0);
+      this.handlerResetCanas();
+    },
+
+    clear() {
+      // this.imageCanvas = null;
+      // this.canvasImg.width = this.canvasImg.width;
+      // this.canvasSample.width = this.canvasSample.width;
+      this.isLoading = false;
+      this.isTextEvent = false;
+      this.isPolyhedronEvent = false;
+      this.isRectangleEvent = false;
+      location.reload();
+    },
+
+    // converter
     em() {
       return this.canvasImg.width > this.maxWidth
         ? this.canvasImg.width / this.maxWidth
