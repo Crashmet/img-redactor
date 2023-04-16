@@ -117,7 +117,7 @@
                     ref="canvasImg"
                   ></canvas>
                   <canvas
-                    class="absolute top-0 bg-transparent object-cover object-center w-full h-full"
+                    class="absolute z-10 top-0 bg-transparent object-cover object-center w-full h-full"
                     ref="canvasSample"
                   ></canvas>
                 </div>
@@ -414,10 +414,16 @@ export default {
       mouseY: null,
       isMousedown: false,
 
-      maxWidth: 500,
+      maxWidth: null,
+      maxHeight: null,
       lineWidth: 4,
       fontSize: 16,
     };
+  },
+
+  created() {
+    this.maxWidth = window.screen.width * 0.4;
+    this.maxHeight = window.screen.height * 0.8;
   },
 
   mounted() {
@@ -448,18 +454,6 @@ export default {
       this.handleMouseleaveSample
     );
     this.canvasSample.addEventListener('pointerup', this.handlerMouseupSample);
-
-    // *** MOBILE EVENT ***
-
-    this.canvasSample.addEventListener(
-      'touchstart',
-      this.handleMousedownSample
-    );
-    this.canvasSample.addEventListener('touchmove', this.handleMousemoveSample);
-    this.canvasSample.addEventListener('touchend', this.handleMouseleaveSample);
-    this.canvasSample.addEventListener('touchend', this.handlerMouseupSample);
-
-    // *** MOBILE EVENT ***
   },
 
   computed: {},
@@ -535,6 +529,8 @@ export default {
     // *** CANVAS MOUSE EVENT ***
 
     handleMousedownSample(event) {
+      event.preventDefault();
+
       this.isMousedown = true;
 
       this.clickX = event.offsetX * this.em();
@@ -691,7 +687,7 @@ export default {
     },
 
     pushPolyhedronCoordinates() {
-      this.polygonPoints.push({ x: this.mouseX, y: this.mouseY });
+      this.polygonPoints.push({ x: this.clickX, y: this.clickY });
     },
 
     previewPolyhedronPoint() {
@@ -706,7 +702,7 @@ export default {
 
     handlerAddPolyhedronPoint() {
       this.contextCanvasSample.beginPath();
-      this.contextCanvasSample.arc(this.mouseX, this.mouseY, 0, 0, Math.PI * 2);
+      this.contextCanvasSample.arc(this.clickX, this.clickY, 0, 0, Math.PI * 2);
 
       this.settingsStylePoligonPreview();
 
@@ -914,6 +910,7 @@ export default {
     },
 
     handleAddEditor() {
+      this.handlerResetCanas();
       this.isEdit = !this.isEdit;
       this.isTextEvent = false;
       this.isPolyhedronEvent = false;
@@ -921,18 +918,21 @@ export default {
     },
 
     handlerTextButton() {
+      this.handlerResetCanas();
       this.isTextEvent = !this.isTextEvent;
       this.isPolyhedronEvent = false;
       this.isRectangleEvent = false;
     },
 
     handlerPolyhedronButton() {
+      this.handlerResetCanas();
       this.isPolyhedronEvent = !this.isPolyhedronEvent;
       this.isTextEvent = false;
       this.isRectangleEvent = false;
     },
 
     handlerRectangleButton() {
+      this.handlerResetCanas();
       this.isRectangleEvent = !this.isRectangleEvent;
       this.isTextEvent = false;
       this.isPolyhedronEvent = false;
@@ -993,4 +993,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style>
+canvas {
+  touch-action: none;
+}
+</style>
