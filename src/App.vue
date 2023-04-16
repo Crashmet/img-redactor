@@ -433,6 +433,8 @@ export default {
     this.canvasSample = this.$refs.canvasSample;
     this.contextCanvasSample = this.canvasSample.getContext('2d');
 
+    // *** DESKTOP EVENT***
+
     this.canvasSample.addEventListener('mousedown', this.handleMousedownSample);
     this.canvasSample.addEventListener('mousemove', this.handleMousemoveSample);
     this.canvasSample.addEventListener(
@@ -440,6 +442,16 @@ export default {
       this.handleMouseleaveSample
     );
     this.canvasSample.addEventListener('mouseup', this.handlerMouseupSample);
+
+    // *** MOBILE EVENT ***
+
+    this.canvasSample.addEventListener(
+      'touchstart',
+      this.handleMousedownSample
+    );
+    this.canvasSample.addEventListener('touchmove', this.handleMousemoveSample);
+    this.canvasSample.addEventListener('touchend', this.handleMouseleaveSample);
+    this.canvasSample.addEventListener('touchend', this.handlerMouseupSample);
   },
 
   computed: {},
@@ -531,6 +543,10 @@ export default {
       this.isMousedown = false;
     },
 
+    handleMouseleaveSample() {
+      this.isMousedown = false;
+    },
+
     handleMousemoveSample() {
       this.mouseX = event.offsetX * this.em();
       this.mouseY = event.offsetY * this.em();
@@ -540,10 +556,6 @@ export default {
       } else if (this.isRectangleEvent) {
         this.mousemoveRectEvent();
       }
-    },
-
-    handleMouseleaveSample() {
-      this.isMousedown = false;
     },
 
     // *** SETTINGS CANVAS FIGURES ***
