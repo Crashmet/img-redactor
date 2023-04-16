@@ -2,7 +2,7 @@
   <div>
     <div class="space-y-12">
       <div ref="dropContainer" class="border-b border-gray-900/10 pb-12">
-        <h2 class="text-base font-semibold leading-7 text-gray-900">
+        <h2 class="mt-1 text-base font-semibold leading-7 text-gray-900">
           Редактор изображений
         </h2>
         <p class="mt-1 text-sm leading-6 text-gray-600">
@@ -17,7 +17,7 @@
               >Photo</label
             >
             <div
-              class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10"
+              class="flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10"
             >
               <div class="text-center">
                 <svg
@@ -32,7 +32,7 @@
                     clip-rule="evenodd"
                   />
                 </svg>
-                <div class="mt-4 flex text-sm leading-6 text-gray-600">
+                <div class="flex text-sm leading-6 text-gray-600">
                   <label
                     for="file-upload"
                     class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
@@ -70,7 +70,7 @@
         >
           <div
             class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-          />
+          ></div>
         </div>
 
         <div class="fixed inset-0 z-10 overflow-y-auto">
@@ -89,7 +89,7 @@
               <div
                 class="relative flex flex-col items-center justify-center transform overflow-hidden rounded-lg bg-white text-center shadow-xl transition-all"
               >
-                <div class="absolute right-0 top-0 -ml-8 flex pr-2 pt-4">
+                <div class="absolute right-0 top-0 -ml-8 flex pr-3 pt-2">
                   <button
                     type="button"
                     class="rounded-md text-gray-300 hover:text-black focus:outline-none focus:ring-2 focus:ring-black"
@@ -102,7 +102,7 @@
 
                 <div class="px-4 min-w-full">
                   <div
-                    class="mb-4 mt-4 text-xl font-semibold leading-6 text-gray-900"
+                    class="mb-4 mt-2 text-xl font-semibold leading-6 text-gray-900"
                   >
                     Panel
                   </div>
@@ -110,7 +110,7 @@
                 <!-- IMG -->
 
                 <div
-                  class="relative overflow-hidden mr-5 ml-5 mb-4 rounded-[5px]"
+                  class="relative overflow-hidden mr-5 ml-5 mb-6 rounded-[5px]"
                 >
                   <canvas
                     class="bg-white object-cover object-center"
@@ -123,28 +123,41 @@
                 </div>
 
                 <!-- input text editor -->
+                <div class="mb-7 px-4 flex align-middle" v-if="isTextEvent">
+                  <div>
+                    <input
+                      type="text"
+                      name="username"
+                      id="username"
+                      autocomplete="..."
+                      class="mr-4 w-32 rounded block ring-1 ring-inset ring-gray-300 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 sm:text-sm hover:bg-gray-50"
+                      placeholder="Enter text"
+                      v-model="inputTextImg"
+                    />
+                  </div>
 
-                <div class="mb-6 px-4" v-if="isTextEvent">
-                  <label
-                    for="username"
-                    class="block text-base font-medium leading-6 text-gray-900 mb-1"
-                    >Введите текст</label
-                  >
-                  <input
-                    type="text"
-                    name="username"
-                    id="username"
-                    autocomplete="..."
-                    class="w-full rounded block ring-1 ring-inset ring-gray-300 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 sm:text-sm hover:bg-gray-50"
-                    placeholder="Enter text"
-                    v-model="inputTextImg"
-                  />
+                  <div class="flex items-center">
+                    <button
+                      type="button"
+                      @click="handlerAddTextImg"
+                      class="mr-2 rounded-md bg-indigo-600 px-3 py-1 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 ring-1 ring-black ring-opacity-5 focus:outline-none"
+                    >
+                      Save
+                    </button>
+                    <button
+                      @click="handlerResetCanas"
+                      type="button"
+                      class="rounded-md bg-white-600 px-3 py-1 text-sm font-semibold text-gray-900 shadow-sm hover:bg-red-700 hover:text-white active:bg-red-600 active:text-white outline-none ring-1 ring-black ring-opacity-5 focus:outline-none"
+                    >
+                      Cancel
+                    </button>
+                  </div>
                 </div>
 
                 <!-- input Poligon editor -->
 
                 <div
-                  class="relative px-4 mb-6 inline-block text-left flex items-center justify-end"
+                  class="relative px-4 mb-6 text-left flex items-center justify-end"
                   v-show="isPolyhedronEvent"
                 >
                   <div class="mr-2">
@@ -187,7 +200,7 @@
                   </div>
                   <div
                     v-show="isSelectPolygons"
-                    class="absolute flex items-center top-10 left-8 z-10 mt-1 h-36 w-28 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-scroll"
+                    class="absolute flex items-center top-10 left-8 z-10 h-36 w-28 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-scroll"
                     role="menu"
                     aria-orientation="vertical"
                     aria-labelledby="menu-button"
@@ -210,10 +223,7 @@
                   </div>
                 </div>
 
-                <div
-                  v-show="isRectangleEvent"
-                  class="flex items-center mb-7 mt-3"
-                >
+                <div v-show="isRectangleEvent" class="flex items-center mb-7">
                   <button
                     @click="handlerAddRectImg"
                     type="button"
@@ -233,7 +243,7 @@
                 <!-- top btn  -->
 
                 <div v-if="isEdit" class="relative flex-1 px-4 mb-8">
-                  <div class="mt-5 flex">
+                  <div class="flex">
                     <span class="">
                       <button
                         @click="handlerTextButton"
@@ -281,7 +291,7 @@
                 <!-- bottom btn  -->
 
                 <div class="relative flex-1 px-4 mb-8">
-                  <div class="mt-5 flex">
+                  <div class="flex">
                     <span class="">
                       <button
                         type="button"
@@ -376,7 +386,10 @@ export default {
       imageCanvas: null,
 
       isTextEvent: false,
+      isTextAdd: false,
       inputTextImg: '',
+      textX: 50,
+      textY: 50,
 
       isPolyhedronEvent: false,
       isSelectPolygons: false,
@@ -506,7 +519,7 @@ export default {
       this.clickY = event.offsetY * this.em();
 
       if (this.isTextEvent) {
-        this.fillTextEventImg();
+        this.mousedownTextEvent();
       } else if (this.isPolyhedronEvent) {
         this.mousedownPolyhedronEvent();
       } else if (this.isRectangleEvent) {
@@ -516,10 +529,6 @@ export default {
 
     handlerMouseupSample() {
       this.isMousedown = false;
-
-      if (this.isRectangleEvent) {
-        this.mouseupRectEvent();
-      }
     },
 
     handleMousemoveSample() {
@@ -527,7 +536,7 @@ export default {
       this.mouseY = event.offsetY * this.em();
 
       if (this.isTextEvent) {
-        this.previewFillText();
+        this.mousemoveTextEvent();
       } else if (this.isRectangleEvent) {
         this.mousemoveRectEvent();
       }
@@ -535,10 +544,6 @@ export default {
 
     handleMouseleaveSample() {
       this.isMousedown = false;
-
-      if (this.isTextEvent) {
-        this.resetCanvasSample();
-      }
     },
 
     // *** SETTINGS CANVAS FIGURES ***
@@ -549,7 +554,7 @@ export default {
       this.contextCanvasSample.font = `bold ${fsEm}px Verdana, sans-serif`;
       this.contextCanvasSample.textAlign = 'center';
       this.contextCanvasSample.textBaseline = 'middle';
-      this.contextCanvasSample.fillStyle = 'rgba(255, 255, 255, 0.6)';
+      this.contextCanvasSample.fillStyle = 'rgba(255, 255, 255, 0.75)';
     },
 
     settingsStyleTextImg() {
@@ -587,26 +592,56 @@ export default {
 
     // *** TEXT EVENTS ***
 
-    fillTextEventImg() {
-      this.settingsStyleTextImg();
-
-      this.contextCanvasImg.fillText(
-        this.inputTextImg,
-        this.clickX,
-        this.clickY
-      );
+    mousedownTextEvent() {
+      if (!this.isTextAdd) {
+        this.previewFillText(this.clickX, this.clickY);
+      }
     },
 
-    previewFillText() {
-      this.settingsStyleTextPreview();
+    mousemoveTextEvent() {
+      if (
+        this.isTextAdd &&
+        this.isMousedown &&
+        this.isPreviewTextCoordinates()
+      ) {
+        this.previewFillText(this.mouseX, this.mouseY);
+      }
+    },
+
+    isPreviewTextCoordinates() {
+      if (
+        this.mouseX > this.textX - this.em() * 30 &&
+        this.mouseX < this.textX + this.em() * 30 &&
+        this.mouseY > this.textY - this.em() * 30 &&
+        this.mouseY < this.textY + this.em() * 30
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+
+    previewFillText(x, y) {
+      this.isTextAdd = true;
+      this.textX = x;
+      this.textY = y;
 
       this.resetCanvasSample();
 
-      this.contextCanvasSample.fillText(
-        this.inputTextImg,
-        this.mouseX,
-        this.mouseY
-      );
+      this.settingsStyleTextPreview();
+
+      this.contextCanvasSample.fillText(this.inputTextImg, x, y);
+    },
+
+    addTextEventImg() {
+      this.settingsStyleTextImg();
+
+      this.contextCanvasImg.fillText(this.inputTextImg, this.textX, this.textY);
+    },
+
+    handlerAddTextImg() {
+      this.addTextEventImg();
+      this.handlerResetCanas();
     },
 
     // *** POLYHEDRON EVENTS ***
@@ -734,7 +769,7 @@ export default {
       }
     },
 
-    findRect() {
+    isFindRect() {
       if (
         this.mouseX > this.rectX + this.em() * 15 &&
         this.mouseX < this.rectX + this.rectWidth - this.em() * 15 &&
@@ -780,15 +815,13 @@ export default {
     },
 
     mousemoveRectEvent() {
-      if (this.isRectAdd && this.findRect() && this.isMousedown) {
+      if (this.isRectAdd && this.isFindRect() && this.isMousedown) {
         this.addСoordinatesRect();
         this.addRectPreview();
       } else if (this.isRectAdd && this.isMousedown) {
         this.findPolygonsRect();
       }
     },
-
-    mouseupRectEvent() {},
 
     mousedownRectEvent() {
       if (!this.isRectAdd) {
@@ -891,6 +924,8 @@ export default {
 
     handlerResetCanas() {
       this.resetCanvasSample();
+      this.isTextAdd = false;
+      this.inputTextImg = '';
       this.polygonPoints = [];
       this.addPointsPreview = 0;
       this.isRectAdd = false;
@@ -923,6 +958,9 @@ export default {
   watch: {
     polygonPointsValue() {
       this.handlerResetCanas();
+    },
+    inputTextImg() {
+      this.previewFillText(this.textX, this.textY);
     },
   },
 };
