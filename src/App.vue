@@ -519,7 +519,7 @@ export default {
       if (this.isTextEvent) {
         this.fillTextEventImg();
       } else if (this.isPolyhedronEvent) {
-        this.previewPolyhedronPoint();
+        this.mousedownPolyhedronEvent();
       } else if (this.isRectangleEvent) {
         this.mousedownRectEvent();
       }
@@ -539,7 +539,7 @@ export default {
 
       if (this.isTextEvent) {
         this.previewFillText();
-      } else if (this.isRectAdd && this.isRectangleEvent) {
+      } else if (this.isRectangleEvent) {
         this.mousemoveRectEvent();
       }
     },
@@ -591,6 +591,8 @@ export default {
 
     // events Canvas
 
+    // texr events
+
     fillTextEventImg() {
       this.settingsStyleTextImg();
 
@@ -611,6 +613,12 @@ export default {
         this.mouseX,
         this.mouseY
       );
+    },
+
+    // polyhedron events
+
+    mousedownPolyhedronEvent() {
+      this.previewPolyhedronPoint();
     },
 
     previewPolyhedronPoint() {
@@ -683,6 +691,8 @@ export default {
       }
     },
 
+    // rectenle event
+
     findAngleRect() {
       if (
         this.clickX < this.rectX + 9 &&
@@ -729,7 +739,7 @@ export default {
     },
 
     mousemoveRectEvent() {
-      if (this.findRect() && this.isMousedown) {
+      if (this.isRectAdd && this.findRect() && this.isMousedown) {
         this.addRect();
       }
     },
@@ -743,7 +753,6 @@ export default {
         this.addRect();
       } else if (this.isRectAdd) {
         this.findAngleRect();
-        this.findRect();
       }
     },
 
