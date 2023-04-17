@@ -2,7 +2,9 @@
   <div>
     <div class="space-y-12">
       <div ref="dropContainer" class="border-b border-gray-900/10 pb-12">
-        <h2 class="mt-1 text-base font-semibold leading-7 text-gray-900">
+        <h2
+          class="dark:text-white mt-1 text-base font-semibold leading-7 text-gray-900"
+        >
           Редактор изображений
         </h2>
         <p class="mt-1 text-sm leading-6 text-gray-600">
@@ -13,7 +15,7 @@
           <div class="col-span-full">
             <label
               for="cover-photo"
-              class="block text-sm font-medium leading-6 text-gray-900"
+              class="dark:text-white block text-sm font-medium leading-6 text-gray-900"
               >Photo</label
             >
             <div
@@ -21,7 +23,7 @@
             >
               <div class="text-center">
                 <svg
-                  class="mx-auto h-12 w-12 text-gray-300"
+                  class="mx-auto h-12 w-12 text-gray-300 dark:text-white"
                   viewBox="0 0 24 24"
                   fill="currentColor"
                   aria-hidden="true"
@@ -37,7 +39,7 @@
                     for="file-upload"
                     class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
                   >
-                    <span>Upload a file</span>
+                    <span class="dark:text-white">Upload a file</span>
                     <input
                       id="file-upload"
                       name="file-upload"
@@ -48,7 +50,7 @@
                   </label>
                   <p class="pl-1">or drag and drop</p>
                 </div>
-                <p class="text-xs leading-5 text-gray-600">
+                <p class="dark:text-white text-xs leading-5 text-gray-600">
                   PNG, JPG, GIF up to 10MB
                 </p>
               </div>
