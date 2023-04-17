@@ -34,12 +34,12 @@
                     for="file-upload"
                     class="mr-1 relative cursor-pointer rounded-md font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
                   >
-                    <span class="dark:text-black">Upload a file</span>
+                    <span class="">Upload a file</span>
                     <input
                       id="file-upload"
                       name="file-upload"
                       type="file"
-                      class="sr-only dark:text-black"
+                      class="sr-only"
                       @input="previewThumbnail"
                     />
                   </label>
