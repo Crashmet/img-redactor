@@ -561,7 +561,6 @@ export default {
 
     handleMouseleaveSample() {
       this.isMousedown = false;
-      this.isMultiTouch = false;
     },
 
     handleMousemoveSample() {
