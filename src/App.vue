@@ -559,10 +559,12 @@ export default {
 
     handlerMouseupSample() {
       this.isMousedown = false;
+      this.isMultiTouch = false;
     },
 
     handleMouseleaveSample() {
       this.isMousedown = false;
+      this.isMultiTouch = false;
     },
 
     handleMousemoveSample() {
