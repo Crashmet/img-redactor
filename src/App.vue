@@ -44,7 +44,7 @@
                       id="file-upload"
                       name="file-upload"
                       type="file"
-                      class="sr-only"
+                      class="sr-only dark:text-gray-600"
                       @input="previewThumbnail"
                     />
                   </label>
