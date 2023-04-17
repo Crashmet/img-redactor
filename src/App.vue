@@ -538,6 +538,8 @@ export default {
 
       if (!event.isPrimary) {
         this.isMultiTouch = true;
+      } else {
+        this.isMultiTouch = false;
       }
 
       this.isMousedown = true;
@@ -556,7 +558,6 @@ export default {
 
     handlerMouseupSample() {
       this.isMousedown = false;
-      this.isMultiTouch = false;
     },
 
     handleMouseleaveSample() {
