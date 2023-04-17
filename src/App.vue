@@ -8,16 +8,11 @@
           Редактор изображений
         </h2>
         <p class="mt-1 text-sm leading-6 text-gray-600">
-          Добавляйте надписи или фигуры
+          Добавляйте надписи и фигуры
         </p>
 
         <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8">
-          <div class="col-span-full">
-            <label
-              for="cover-photo"
-              class="dark:text-white block text-sm font-medium leading-6 text-gray-900"
-              >Photo</label
-            >
+          <div class="mt-2 col-span-full">
             <div
               class="flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10"
             >
