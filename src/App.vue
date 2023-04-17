@@ -117,6 +117,7 @@
                     ref="canvasImg"
                   ></canvas>
                   <canvas
+                    :class="isMultiTouchOff"
                     class="absolute z-10 top-0 bg-transparent object-cover object-center w-full h-full"
                     ref="canvasSample"
                   ></canvas>
@@ -160,11 +161,11 @@
                   class="relative px-4 mb-6 text-left flex items-center justify-end"
                   v-show="isPolyhedronEvent"
                 >
-                  <div class="mr-2">
+                  <div class="mr-4">
                     <button
                       @click="isSelectPolygons = !isSelectPolygons"
                       type="button"
-                      class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                      class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-1 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                       id="menu-button"
                     >
                       {{ polygonPointsValue }}
@@ -200,20 +201,19 @@
                   </div>
                   <div
                     v-show="isSelectPolygons"
-                    class="absolute flex items-center top-10 left-8 z-10 h-36 w-28 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-scroll"
+                    class="absolute flex items-center top-9 left-4 z-10 max-h-36 max-w-28 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-scroll"
                     role="menu"
                     aria-orientation="vertical"
                     aria-labelledby="menu-button"
-                    tabindex="-1"
                   >
                     <div class="py-1 text-center" role="none">
-                      <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
+                      <!--  -->
                       <a
                         v-for="value in polygonPointsSelectList"
                         :key="value"
                         @click="addPolygonPointsValue(value)"
                         href="#"
-                        class="text-gray-700 block px-4 py-2 text-sm"
+                        class="text-gray-700 block px-4 py-2 text-sm active: bg-gray-100 active:text-gray-900"
                         role="menuitem"
                         tabindex="-1"
                         id="menu-item-0"
@@ -413,6 +413,8 @@ export default {
       mouseX: null,
       mouseY: null,
       isMousedown: false,
+      isMultiTouch: false,
+      multiTouchOffClass: 'touch-action',
 
       em: 1,
       maxWidth: null,
@@ -457,7 +459,11 @@ export default {
     this.canvasSample.addEventListener('pointerup', this.handlerMouseupSample);
   },
 
-  computed: {},
+  computed: {
+    isMultiTouchOff() {
+      return this.isMultiTouch ? '' : this.multiTouchOffClass;
+    },
+  },
 
   methods: {
     // *** DOWNOLAND and SET IMG ***
@@ -532,6 +538,10 @@ export default {
 
     handleMousedownSample(event) {
       event.preventDefault();
+
+      if (!event.isPrimary) {
+        this.isMultiTouch = true;
+      }
 
       this.isMousedown = true;
 
@@ -1018,7 +1028,7 @@ export default {
 </script>
 
 <style>
-canvas {
+.touch-action {
   touch-action: none;
 }
 </style>
