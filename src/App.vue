@@ -29,17 +29,17 @@
                     clip-rule="evenodd"
                   />
                 </svg>
-                <div class="flex text-sm leading-6 text-gray-600">
+                <div class="mt-1 flex text-sm leading-6 text-gray-600">
                   <label
                     for="file-upload"
-                    class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
+                    class="mr-1 relative cursor-pointer rounded-md font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
                   >
-                    <span class="dark:text-white">Upload a file</span>
+                    <span class="">Upload a file</span>
                     <input
                       id="file-upload"
                       name="file-upload"
                       type="file"
-                      class="sr-only dark:text-gray-600"
+                      class="sr-only dark:text-white"
                       @input="previewThumbnail"
                     />
                   </label>
