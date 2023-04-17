@@ -536,11 +536,11 @@ export default {
     handleMousedownSample(event) {
       event.preventDefault();
 
-      if (!event.isPrimary) {
-        this.isMultiTouch = true;
-      } else {
-        this.isMultiTouch = false;
-      }
+      // if (!event.isPrimary) {
+      //   this.isMultiTouch = true;
+      // } else {
+      //   this.isMultiTouch = false;
+      // }
 
       this.isMousedown = true;
 
