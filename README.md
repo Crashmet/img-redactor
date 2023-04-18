@@ -1,12 +1,16 @@
 # Image redactor online
+```
+```
+# Ссылка на проект - [Landing](https://crashmet.github.io/img-redactor/dist)
 
-## Ссылка на проект  -  [Landing](https://crashmet.github.io/img-redactor/dist)
-
+```
+```
 
 
 ### Используемые библиотеки:
 
 - [Vue](https://vuejs.org/)
+- [Vite](https://vitejs.dev/)
 - [Canvas](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D)
 - [TailwindCSS](https://tailwindcss.com/docs/outline-style)
 - [Hero icons for Vue.js](https://vuex.vuejs.org/)
